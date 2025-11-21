@@ -1,11 +1,16 @@
-import React from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Home } from './views/Home';
-import { ConnectFour } from './games/ConnectFour';
-import { FlappyBird } from './games/FlappyBird';
-import { MemoryGame } from './games/MemoryGame';
-import { CatcherGame } from './games/CatcherGame';
-import { GameRoute } from './types';
+import React from "react";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { Home } from "./views/Home";
+import { ConnectFour } from "./games/ConnectFour";
+import { FlappyBird } from "./games/FlappyBird";
+import { MemoryGame } from "./games/MemoryGame";
+import { CatcherGame } from "./games/CatcherGame";
+import { GameRoute } from "./types";
 
 const AnimatedRoutes: React.FC = () => {
   const location = useLocation();

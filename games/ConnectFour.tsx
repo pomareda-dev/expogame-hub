@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { GameLayout } from '../components/GameLayout';
-import { ResultModal } from '../components/ResultModal';
-import { GameStatus } from '../types';
+import React, { useState, useEffect } from "react";
+import { GameLayout } from "../components/GameLayout";
+import { ResultModal } from "../components/ResultModal";
+import { GameStatus } from "../types";
 
 const ROWS = 6;
 const COLS = 7;
@@ -10,10 +10,12 @@ type Player = 1 | 2 | null; // 1: Red, 2: Yellow
 export const ConnectFour: React.FC = () => {
   const [board, setBoard] = useState<Player[][]>([]);
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
-  const [status, setStatus] = useState<GameStatus>('PLAYING');
+  const [status, setStatus] = useState<GameStatus>("PLAYING");
   const [winner, setWinner] = useState<Player>(null);
   // Track the last move to apply the animation only to the new piece
-  const [lastMove, setLastMove] = useState<{ r: number; c: number } | null>(null);
+  const [lastMove, setLastMove] = useState<{ r: number; c: number } | null>(
+    null
+  );
 
   useEffect(() => {
     initGame();
@@ -23,39 +25,56 @@ export const ConnectFour: React.FC = () => {
     const newBoard = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
     setBoard(newBoard);
     setCurrentPlayer(1);
-    setStatus('PLAYING');
+    setStatus("PLAYING");
     setWinner(null);
     setLastMove(null);
   };
 
-  const checkWin = (boardState: Player[][], row: number, col: number, player: Player) => {
+  const checkWin = (
+    boardState: Player[][],
+    row: number,
+    col: number,
+    player: Player
+  ) => {
     // Directions: [deltaRow, deltaCol]
     const directions = [
-      [0, 1],  // Horizontal
-      [1, 0],  // Vertical
-      [1, 1],  // Diagonal Down-Right
+      [0, 1], // Horizontal
+      [1, 0], // Vertical
+      [1, 1], // Diagonal Down-Right
       [1, -1], // Diagonal Down-Left
     ];
 
     for (const [dr, dc] of directions) {
       let count = 1;
-      
+
       // Check positive direction
       for (let i = 1; i < 4; i++) {
         const r = row + dr * i;
         const c = col + dc * i;
-        if (r >= 0 && r < ROWS && c >= 0 && c < COLS && boardState[r][c] === player) {
+        if (
+          r >= 0 &&
+          r < ROWS &&
+          c >= 0 &&
+          c < COLS &&
+          boardState[r][c] === player
+        ) {
           count++;
         } else {
           break;
         }
       }
-      
+
       // Check negative direction
       for (let i = 1; i < 4; i++) {
         const r = row - dr * i;
         const c = col - dc * i;
-        if (r >= 0 && r < ROWS && c >= 0 && c < COLS && boardState[r][c] === player) {
+        if (
+          r >= 0 &&
+          r < ROWS &&
+          c >= 0 &&
+          c < COLS &&
+          boardState[r][c] === player
+        ) {
           count++;
         } else {
           break;
@@ -68,9 +87,9 @@ export const ConnectFour: React.FC = () => {
   };
 
   const dropPiece = (colIndex: number) => {
-    if (status !== 'PLAYING') return;
+    if (status !== "PLAYING") return;
 
-    const newBoard = [...board.map(row => [...row])];
+    const newBoard = [...board.map((row) => [...row])];
     let placedRow = -1;
 
     // Find lowest empty spot
@@ -88,10 +107,10 @@ export const ConnectFour: React.FC = () => {
     setLastMove({ r: placedRow, c: colIndex });
 
     if (checkWin(newBoard, placedRow, colIndex, currentPlayer)) {
-      setStatus('VICTORY');
+      setStatus("VICTORY");
       setWinner(currentPlayer);
-    } else if (newBoard.every(row => row.every(cell => cell !== null))) {
-      setStatus('GAME_OVER'); // Draw
+    } else if (newBoard.every((row) => row.every((cell) => cell !== null))) {
+      setStatus("GAME_OVER"); // Draw
     } else {
       setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
@@ -102,8 +121,12 @@ export const ConnectFour: React.FC = () => {
       <div className="flex flex-col items-center gap-6">
         <div className="bg-slate-800/50 px-6 py-2 rounded-full border border-white/10">
           <span className="text-slate-300 mr-2">Current Turn:</span>
-          <span className={`font-bold ${currentPlayer === 1 ? 'text-rose-500' : 'text-yellow-400'}`}>
-            {currentPlayer === 1 ? 'Red Player' : 'Yellow Player'}
+          <span
+            className={`font-bold ${
+              currentPlayer === 1 ? "text-rose-500" : "text-yellow-400"
+            }`}
+          >
+            {currentPlayer === 1 ? "Red Player" : "Yellow Player"}
           </span>
         </div>
 
@@ -111,41 +134,64 @@ export const ConnectFour: React.FC = () => {
           <div className="grid grid-cols-7 gap-2 sm:gap-3 relative z-10">
             {/* Clickable columns logic */}
             {Array.from({ length: COLS }).map((_, colIndex) => (
-              <div key={colIndex} className="flex flex-col gap-2 sm:gap-3" onClick={() => dropPiece(colIndex)}>
+              <div
+                key={colIndex}
+                className="flex flex-col gap-2 sm:gap-3"
+                onClick={() => dropPiece(colIndex)}
+              >
                 {board.map((row, rowIndex) => {
-                    const isLastMove = lastMove?.r === rowIndex && lastMove?.c === colIndex;
-                    // Calculate drop height: (Index + 1) * 100% relative height + a bit extra
-                    const dropHeight = `-${(rowIndex + 1) * 100 + 20}%`;
-                    
-                    return (
-                      <div 
-                        key={`${rowIndex}-${colIndex}`}
-                        className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-slate-900 flex items-center justify-center cursor-pointer hover:ring-4 ring-white/10 transition-all relative overflow-visible"
-                      >
-                        {/* The Piece */}
-                        {row[colIndex] && (
-                          <div 
-                            className={`w-full h-full rounded-full ${
-                              row[colIndex] === 1 ? 'bg-rose-500 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]' : 'bg-yellow-400 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]'
-                            } ${isLastMove ? 'animate-drop' : ''}`}
-                            style={isLastMove ? { '--drop-height': dropHeight } as React.CSSProperties : {}}
-                          ></div>
-                        )}
-                      </div>
-                    );
+                  const isLastMove =
+                    lastMove?.r === rowIndex && lastMove?.c === colIndex;
+                  // Calculate drop height: (Index + 1) * 100% relative height + a bit extra
+                  const dropHeight = `-${(rowIndex + 1) * 100 + 20}%`;
+
+                  return (
+                    <div
+                      key={`${rowIndex}-${colIndex}`}
+                      className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-slate-900 flex items-center justify-center cursor-pointer hover:ring-4 ring-white/10 transition-all relative overflow-visible"
+                    >
+                      {/* The Piece */}
+                      {row[colIndex] && (
+                        <div
+                          className={`w-full h-full rounded-full ${
+                            row[colIndex] === 1
+                              ? "bg-rose-500 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
+                              : "bg-yellow-400 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
+                          } ${isLastMove ? "animate-drop" : ""}`}
+                          style={
+                            isLastMove
+                              ? ({
+                                  "--drop-height": dropHeight,
+                                } as React.CSSProperties)
+                              : {}
+                          }
+                        ></div>
+                      )}
+                    </div>
+                  );
                 })}
               </div>
             ))}
           </div>
         </div>
-        <p className="text-slate-500 text-sm">Tap a column to drop your piece</p>
+        <p className="text-slate-500 text-sm">
+          Tap a column to drop your piece
+        </p>
       </div>
 
-      <ResultModal 
-        isOpen={status !== 'PLAYING'}
-        title={status === 'VICTORY' ? `${winner === 1 ? 'Red' : 'Yellow'} Wins!` : "It's a Draw!"}
-        message={status === 'VICTORY' ? "Congratulations on connecting four!" : "The board is full."}
-        isVictory={status === 'VICTORY'}
+      <ResultModal
+        isOpen={status !== "PLAYING"}
+        title={
+          status === "VICTORY"
+            ? `${winner === 1 ? "Red" : "Yellow"} Wins!`
+            : "It's a Draw!"
+        }
+        message={
+          status === "VICTORY"
+            ? "Congratulations on connecting four!"
+            : "The board is full."
+        }
+        isVictory={status === "VICTORY"}
         onRetry={initGame}
       />
     </GameLayout>

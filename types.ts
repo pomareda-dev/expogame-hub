@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
 export enum GameRoute {
-  HOME = '/',
-  CONNECT_FOUR = '/connect-four',
-  FLAPPY_BIRD = '/flappy-bird',
-  MEMORY = '/memory',
-  CATCHER = '/catcher',
+  HOME = "/",
+  CONNECT_FOUR = "/connect-four",
+  FLAPPY_BIRD = "/flappy-bird",
+  MEMORY = "/memory",
+  CATCHER = "/catcher",
 }
 
 export interface GameConfig {
@@ -17,4 +17,4 @@ export interface GameConfig {
   description: string;
 }
 
-export type GameStatus = 'IDLE' | 'PLAYING' | 'GAME_OVER' | 'VICTORY';
+export type GameStatus = "IDLE" | "PLAYING" | "GAME_OVER" | "VICTORY";
