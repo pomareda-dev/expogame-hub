@@ -51,17 +51,15 @@ export const Home: React.FC = () => {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 px-8 py-8 flex justify-between items-center">
+      <header className="relative z-10 px-8 py-8 flex justify-between items-start">
         <div className="animate-slide-up" style={{ animationDelay: "0ms" }}>
-          <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-lg">
-            ExpoHub<span className="text-brand-500">.os</span>
-          </h1>
-          <p className="text-slate-300 text-sm mt-1 font-medium tracking-wide">
+          <img src="assets/novatech.svg" className="mb-4 w-[160px] sm:w-[200px]" alt="Novatech" />
+          <p className="text-slate-300 text-xs sm:text-sm mt-1 font-medium tracking-wide">
             Interactive Experience Center
           </p>
         </div>
         <div
-          className="px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 text-xs font-mono text-slate-200 flex items-center gap-2 shadow-lg animate-slide-up"
+          className="px-3 md:px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 text-xs font-mono text-slate-200 flex items-center gap-2 shadow-lg animate-slide-up"
           style={{ animationDelay: "100ms" }}
         >
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
@@ -99,7 +97,7 @@ export const Home: React.FC = () => {
                 <h3 className="text-lg font-bold text-white mb-1 group-hover:text-brand-200 transition-colors">
                   {game.name}
                 </h3>
-                <div className="h-6 overflow-hidden relative">
+                <div className="w-[180px] h-6 overflow-hidden relative">
                   <p className="text-xs text-slate-400 uppercase tracking-wide font-semibold transition-all duration-300 absolute w-full top-0 group-hover:-top-6 opacity-100 group-hover:opacity-0">
                     Tap to Play
                   </p>
@@ -135,7 +133,7 @@ export const Home: React.FC = () => {
         style={{ animationDelay: "600ms" }}
       >
         <p className="text-slate-500 text-xs font-medium">
-          Designed for Interactive Expo Experience • v1.0.0
+          Designed for Novatech with ❤️ by Alexander Pomareda • v1.0.0
         </p>
       </footer>
     </div>
