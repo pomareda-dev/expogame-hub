@@ -4,8 +4,6 @@ import { ResultModal } from "../components/ResultModal";
 import { Button } from "../components/Button";
 import { GameStatus } from "../types";
 
-const ICONS = ["🚀", "🎮", "🎧", "⌚", "📷", "💻", "🔋", "💡"];
-
 const LOGOS = [
   "assets/logos/argus-logo.png",
   "assets/logos/bitronics-logo.png",
@@ -14,6 +12,7 @@ const LOGOS = [
   "assets/logos/novatech-logo.png",
   "assets/logos/orion-logo.png",
   "assets/logos/w3ts-logo.png",
+  "assets/logos/server-logo.png",
 ];
 
 const DEVICES = [
@@ -43,7 +42,7 @@ export const MemoryGame: React.FC = () => {
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [status, setStatus] = useState<GameStatus>("IDLE");
-  const [difficulty, setDifficulty] = useState<"EASY" | "HARD">("EASY");
+  const [difficulty, setDifficulty] = useState<"EASY" | "HARD" | "INSANE">("EASY");
 
   useEffect(() => {
     if (status === "PLAYING") {
@@ -52,7 +51,10 @@ export const MemoryGame: React.FC = () => {
   }, [status, difficulty]);
 
   const initializeDeck = () => {
-    const iconsToUse = difficulty === "EASY" ? ICONS.slice(0, 6) : ICONS;
+    let iconsToUse: string[] = [];
+    if (difficulty === "EASY") iconsToUse = LOGOS.slice(0, 6);
+    else if (difficulty === "HARD") iconsToUse = LOGOS;
+    else iconsToUse = DEVICES;
     const deck = [...iconsToUse, ...iconsToUse]
       .sort(() => Math.random() - 0.5)
       .map((icon, index) => ({
@@ -131,24 +133,34 @@ export const MemoryGame: React.FC = () => {
                 setStatus("PLAYING");
               }}
               size="lg"
-              className="flex-1 h-24 text-xl"
+              className="flex-1 flex-col h-24 text-xl"
             >
-              Easy
-              <br />
-              <span className="text-sm opacity-75 font-normal">(12 Cards)</span>
+              <div>Easy</div>
+              <div className="text-sm opacity-75 font-normal">(12 Cards)</div>
             </Button>
-            <Button
+              <Button
               onClick={() => {
                 setDifficulty("HARD");
                 setStatus("PLAYING");
               }}
               size="lg"
               variant="secondary"
-              className="flex-1 h-24 text-xl"
+              className="flex-1 flex-col h-24 text-xl"
             >
-              Hard
-              <br />
-              <span className="text-sm opacity-75 font-normal">(16 Cards)</span>
+              <div>Hard</div>
+              <div className="text-sm opacity-75 font-normal">(16 Cards)</div>
+            </Button>
+            <Button
+              onClick={() => {
+                setDifficulty("INSANE");
+                setStatus("PLAYING");
+              }}
+              size="lg"
+              variant="danger"
+              className="flex-1 flex-col h-24 text-xl"
+            >
+              <div>Insane</div>
+              <div className="text-sm opacity-75 font-normal">(24 Cards)</div>
             </Button>
           </div>
         </div>
@@ -181,7 +193,11 @@ export const MemoryGame: React.FC = () => {
         {/* Grid Container: expanded to fill vertical space with flex-1 */}
         <div
           className={`grid w-full max-w-6xl flex-1 gap-2 sm:gap-4 mb-2 ${
-            difficulty === "EASY" ? "grid-cols-3" : "grid-cols-4"
+            difficulty === "EASY"
+              ? "grid-cols-3"
+              : difficulty === "HARD"
+              ? "grid-cols-4"
+              : "grid-cols-4 sm:grid-cols-6"
           }`}
         >
           {cards.map((card, index) => (
@@ -212,9 +228,11 @@ export const MemoryGame: React.FC = () => {
                   card.isFlipped || card.isMatched ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <span className="text-5xl sm:text-6xl drop-shadow-md animate-pop-in">
-                  {card.icon}
-                </span>
+                <img
+                  src={card.icon}
+                  alt="memory card"
+                  className="w-3/4 h-3/4 object-contain drop-shadow-md animate-pop-in"
+                />
               </div>
             </button>
           ))}
