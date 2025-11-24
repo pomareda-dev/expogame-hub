@@ -5,7 +5,7 @@ import { GameStatus } from "../types";
 
 const ROWS = 6;
 const COLS = 7;
-type Player = 1 | 2 | null; // 1: Red, 2: Yellow
+type Player = 1 | 2 | null; // 1: Red, 2: Green
 
 export const ConnectFour: React.FC = () => {
   const [board, setBoard] = useState<Player[][]>([]);
@@ -123,10 +123,10 @@ export const ConnectFour: React.FC = () => {
           <span className="text-slate-300 mr-2">Current Turn:</span>
           <span
             className={`font-bold ${
-              currentPlayer === 1 ? "text-rose-500" : "text-yellow-400"
+              currentPlayer === 1 ? "text-rose-500" : "text-lime-400"
             }`}
           >
-            {currentPlayer === 1 ? "Red Player" : "Yellow Player"}
+            {currentPlayer === 1 ? "Red Player" : "Green Player"}
           </span>
         </div>
 
@@ -156,7 +156,7 @@ export const ConnectFour: React.FC = () => {
                           className={`w-full h-full rounded-full ${
                             row[colIndex] === 1
                               ? "bg-rose-500 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
-                              : "bg-yellow-400 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
+                              : "bg-lime-400 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
                           } ${isLastMove ? "animate-drop" : ""}`}
                           style={
                             isLastMove
@@ -183,7 +183,7 @@ export const ConnectFour: React.FC = () => {
         isOpen={status !== "PLAYING"}
         title={
           status === "VICTORY"
-            ? `${winner === 1 ? "Red" : "Yellow"} Wins!`
+            ? `${winner === 1 ? "Red" : "Green"} Wins!`
             : "It's a Draw!"
         }
         message={
