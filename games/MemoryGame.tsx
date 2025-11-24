@@ -129,6 +129,7 @@ export const MemoryGame: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md px-4">
             <Button
               onClick={() => {
+                setCards([]);
                 setDifficulty("EASY");
                 setStatus("PLAYING");
               }}
@@ -140,6 +141,7 @@ export const MemoryGame: React.FC = () => {
             </Button>
               <Button
               onClick={() => {
+                setCards([]);
                 setDifficulty("HARD");
                 setStatus("PLAYING");
               }}
@@ -152,6 +154,7 @@ export const MemoryGame: React.FC = () => {
             </Button>
             <Button
               onClick={() => {
+                setCards([]);
                 setDifficulty("INSANE");
                 setStatus("PLAYING");
               }}
@@ -244,7 +247,10 @@ export const MemoryGame: React.FC = () => {
         title="Memory Master!"
         message={`You cleared the board in ${moves} moves.`}
         isVictory={true}
-        onRetry={() => setStatus("IDLE")}
+        onRetry={() => {
+          setCards([]);
+          setStatus("IDLE");
+        }}
       />
     </GameLayout>
   );
