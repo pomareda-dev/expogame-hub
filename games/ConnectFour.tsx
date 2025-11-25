@@ -17,6 +17,8 @@ export const ConnectFour: React.FC = () => {
     null
   );
 
+  const [isInputLocked, setIsInputLocked] = useState(false);
+
   useEffect(() => {
     initGame();
   }, []);
@@ -28,6 +30,7 @@ export const ConnectFour: React.FC = () => {
     setStatus("PLAYING");
     setWinner(null);
     setLastMove(null);
+    setIsInputLocked(false);
   };
 
   const checkWin = (
@@ -87,7 +90,7 @@ export const ConnectFour: React.FC = () => {
   };
 
   const dropPiece = (colIndex: number) => {
-    if (status !== "PLAYING") return;
+    if (status !== "PLAYING" || isInputLocked) return;
 
     const newBoard = [...board.map((row) => [...row])];
     let placedRow = -1;
@@ -107,10 +110,18 @@ export const ConnectFour: React.FC = () => {
     setLastMove({ r: placedRow, c: colIndex });
 
     if (checkWin(newBoard, placedRow, colIndex, currentPlayer)) {
-      setStatus("VICTORY");
+      setIsInputLocked(true);
       setWinner(currentPlayer);
+      setTimeout(() => {
+        setStatus("VICTORY");
+        setIsInputLocked(false);
+      }, 1000);
     } else if (newBoard.every((row) => row.every((cell) => cell !== null))) {
-      setStatus("GAME_OVER"); // Draw
+      setIsInputLocked(true);
+      setTimeout(() => {
+        setStatus("GAME_OVER"); // Draw
+        setIsInputLocked(false);
+      }, 1000);
     } else {
       setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
