@@ -130,50 +130,64 @@ export const ConnectFour: React.FC = () => {
           </span>
         </div>
 
-        <div className="p-4 bg-blue-700 rounded-xl shadow-2xl shadow-blue-900/50 border-4 border-blue-600 relative">
-          <div className="grid grid-cols-7 gap-2 sm:gap-3 relative z-10">
-            {/* Clickable columns logic */}
-            {Array.from({ length: COLS }).map((_, colIndex) => (
-              <div
-                key={colIndex}
-                className="flex flex-col gap-2 sm:gap-3"
-                onClick={() => dropPiece(colIndex)}
-              >
-                {board.map((row, rowIndex) => {
-                  const isLastMove =
-                    lastMove?.r === rowIndex && lastMove?.c === colIndex;
-                  // Calculate drop height: (Index + 1) * 100% relative height + a bit extra
-                  const dropHeight = `-${(rowIndex + 1) * 100 + 20}%`;
+        <div className="bg-blue-800 p-2 rounded-xl">
+          <div className="p-4 sm:p-6 bg-zinc-50 rounded-xl shadow-2xl shadow-blue-900/50 border-4 border-blue-700 relative">
+            <div className="grid grid-cols-7 gap-4 sm:gap-6 md:gap-9 relative z-10">
+              {/* Clickable columns logic */}
+              {Array.from({ length: COLS }).map((_, colIndex) => (
+                <div
+                  key={colIndex}
+                  className="flex flex-col gap-4 sm:gap-6 md:gap-9"
+                  onClick={() => dropPiece(colIndex)}
+                >
+                  {board.map((row, rowIndex) => {
+                    const isLastMove =
+                      lastMove?.r === rowIndex && lastMove?.c === colIndex;
+                    // Calculate drop height: (Index + 1) * 100% relative height + a bit extra
+                    const dropHeight = `-${(rowIndex + 1) * 100 + 20}%`;
 
-                  return (
-                    <div
-                      key={`${rowIndex}-${colIndex}`}
-                      className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-slate-900 flex items-center justify-center cursor-pointer hover:ring-4 ring-white/10 transition-all relative overflow-visible"
-                    >
-                      {/* The Piece */}
-                      {row[colIndex] && (
-                        <div
-                          className={`w-full h-full rounded-full ${
-                            row[colIndex] === 1
-                              ? "bg-rose-500 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
-                              : "bg-lime-400 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
-                          } ${isLastMove ? "animate-drop" : ""}`}
-                          style={
-                            isLastMove
-                              ? ({
-                                  "--drop-height": dropHeight,
-                                } as React.CSSProperties)
-                              : {}
-                          }
-                        ></div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+                    return (
+                      <div
+                        key={`${rowIndex}-${colIndex}`}
+                        className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full border-[2px] border-blue-700 bg-slate-900 flex items-center justify-center cursor-pointer hover:ring-4 ring-white/10 transition-all relative overflow-visible"
+                      >
+                        {/* The Piece */}
+                        {row[colIndex] && (
+                          <div
+                            className={`w-full h-full rounded-full ${
+                              row[colIndex] === 1
+                                ? "bg-rose-500 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
+                                : "bg-lime-400 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3)]"
+                            } ${isLastMove ? "animate-drop" : ""}`}
+                            style={
+                              isLastMove
+                                ? ({
+                                    "--drop-height": dropHeight,
+                                  } as React.CSSProperties)
+                                : {}
+                            }
+                          ></div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-center py-3">
+            <div className="flex items-center gap-2">
+              <img
+                src="assets/orion-white.png"
+                className="w-12 h-12"
+                alt="Orion"
+              />
+              <span className="text-3xl text-white">OrionLX+</span>
+            </div>
           </div>
         </div>
+
         <p className="text-slate-500 text-sm">
           Tap a column to drop your piece
         </p>

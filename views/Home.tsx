@@ -53,7 +53,11 @@ export const Home: React.FC = () => {
       {/* Header */}
       <header className="relative z-10 px-8 py-8 flex justify-between items-start">
         <div className="animate-slide-up" style={{ animationDelay: "0ms" }}>
-          <img src="assets/novatech.svg" className="mb-4 w-[160px] sm:w-[200px]" alt="Novatech" />
+          <img
+            src="assets/novatech.svg"
+            className="mb-4 w-[160px] sm:w-[200px]"
+            alt="Novatech"
+          />
           <p className="text-slate-300 text-xs sm:text-sm mt-1 font-medium tracking-wide">
             Interactive Experience Center
           </p>
@@ -133,7 +137,7 @@ export const Home: React.FC = () => {
         style={{ animationDelay: "600ms" }}
       >
         <p className="text-slate-500 text-xs font-medium">
-          Designed for Novatech with ❤️ by Alexander Pomareda • v1.0.0
+          Designed for NovaTech with ❤️ by Alexander Pomareda • v1.0.0
         </p>
       </footer>
     </div>

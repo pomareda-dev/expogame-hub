@@ -46,7 +46,7 @@ export const GameLayout: React.FC<GameLayoutProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <span className="hidden sm:block text-xs font-mono text-slate-400 uppercase tracking-widest">
-            ExpoGames OS
+            NovaTech OS
           </span>
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
         </div>
