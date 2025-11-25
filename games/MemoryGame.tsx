@@ -42,7 +42,9 @@ export const MemoryGame: React.FC = () => {
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [status, setStatus] = useState<GameStatus>("IDLE");
-  const [difficulty, setDifficulty] = useState<"EASY" | "HARD" | "INSANE">("EASY");
+  const [difficulty, setDifficulty] = useState<"EASY" | "HARD" | "INSANE">(
+    "EASY"
+  );
 
   useEffect(() => {
     if (status === "PLAYING") {
@@ -139,7 +141,7 @@ export const MemoryGame: React.FC = () => {
               <div>Easy</div>
               <div className="text-sm opacity-75 font-normal">(12 Cards)</div>
             </Button>
-              <Button
+            <Button
               onClick={() => {
                 setCards([]);
                 setDifficulty("HARD");
@@ -196,11 +198,7 @@ export const MemoryGame: React.FC = () => {
         {/* Grid Container: expanded to fill vertical space with flex-1 */}
         <div
           className={`grid w-full max-w-6xl flex-1 gap-2 sm:gap-4 mb-2 ${
-            difficulty === "EASY"
-              ? "grid-cols-3"
-              : difficulty === "HARD"
-              ? "grid-cols-4"
-              : "grid-cols-4 sm:grid-cols-6"
+            difficulty === "EASY" ? "grid-cols-3" : "grid-cols-4"
           }`}
         >
           {cards.map((card, index) => (
