@@ -115,13 +115,13 @@ export const ConnectFour: React.FC = () => {
       setTimeout(() => {
         setStatus("VICTORY");
         setIsInputLocked(false);
-      }, 1000);
+      }, 750);
     } else if (newBoard.every((row) => row.every((cell) => cell !== null))) {
       setIsInputLocked(true);
       setTimeout(() => {
         setStatus("GAME_OVER"); // Draw
         setIsInputLocked(false);
-      }, 1000);
+      }, 750);
     } else {
       setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
@@ -141,14 +141,14 @@ export const ConnectFour: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-blue-800 p-2 rounded-xl">
-          <div className="p-4 sm:p-6 bg-zinc-50 rounded-xl shadow-2xl shadow-blue-900/50 border-4 border-blue-700 relative">
-            <div className="grid grid-cols-7 gap-4 sm:gap-6 md:gap-9 relative z-10">
+        <div className="bg-blue-800 p-2 lg:p-6 rounded-xl">
+          <div className="p-4 sm:p-6 lg:p-10 bg-zinc-50 rounded-xl shadow-2xl shadow-blue-900/50 border-4 border-blue-700 relative">
+            <div className="grid grid-cols-7 gap-4 sm:gap-6 md:gap-9 lg:gap-16 relative z-10">
               {/* Clickable columns logic */}
               {Array.from({ length: COLS }).map((_, colIndex) => (
                 <div
                   key={colIndex}
-                  className="flex flex-col gap-4 sm:gap-6 md:gap-9"
+                  className="flex flex-col gap-4 sm:gap-6 md:gap-9 lg:gap-16"
                   onClick={() => dropPiece(colIndex)}
                 >
                   {board.map((row, rowIndex) => {
@@ -160,7 +160,7 @@ export const ConnectFour: React.FC = () => {
                     return (
                       <div
                         key={`${rowIndex}-${colIndex}`}
-                        className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full border-[2px] border-blue-700 bg-slate-900 flex items-center justify-center cursor-pointer hover:ring-4 ring-white/10 transition-all relative overflow-visible"
+                        className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full border-[2px] border-blue-700 bg-slate-900 flex items-center justify-center cursor-pointer hover:ring-4 ring-white/10 transition-all relative overflow-visible"
                       >
                         {/* The Piece */}
                         {row[colIndex] && (
@@ -187,14 +187,14 @@ export const ConnectFour: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-center py-3">
+          <div className="flex justify-center py-3 lg:pt-5">
             <div className="flex items-center gap-2">
               <img
                 src="assets/orion-white.png"
                 className="w-12 h-12"
                 alt="Orion"
               />
-              <span className="text-3xl text-white">OrionLX+</span>
+              <span className="text-3xl lg:text-4xl text-white">OrionLX+</span>
             </div>
           </div>
         </div>
