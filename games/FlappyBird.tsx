@@ -17,13 +17,14 @@ export const FlappyBird: React.FC = () => {
     birdY: 300,
     birdVelocity: 0,
     birdSize: 20,
-    gravity: 0.2, // Reduced gravity for easier gameplay
-    jumpStrength: -7.5, // Adjusted jump for smoother control
+    gravity: 0.25,
+    jumpStrength: -6.5,
     obstacles: [] as { x: number; gapY: number; passed: boolean }[],
     obstacleWidth: 50,
-    obstacleGap: 200, // wider gap for better UX on touch
+    obstacleGap: 250,
     obstacleSpeed: 3,
     spawnTimer: 0,
+    score: 0,
   });
 
   const requestRef = useRef<number>(0);
@@ -35,6 +36,8 @@ export const FlappyBird: React.FC = () => {
       birdVelocity: 0,
       obstacles: [],
       spawnTimer: 0,
+      score: 0,
+      obstacleGap: 250, // Reset gap
     };
     setScore(0);
     setStatus("PLAYING");
@@ -162,6 +165,11 @@ export const FlappyBird: React.FC = () => {
       // Score
       if (!obs.passed && birdRect.left > obsRight) {
         obs.passed = true;
+        state.score += 1;
+
+        const reduction = Math.floor(state.score / 10) * 10;
+        state.obstacleGap = Math.max(100, 250 - reduction);
+
         setScore((prev) => {
           const newScore = prev + 1;
           updateHighScore(newScore);
