@@ -17,12 +17,12 @@ export const FlappyBird: React.FC = () => {
     birdY: 300,
     birdVelocity: 0,
     birdSize: 20,
-    gravity: 0.25,
-    jumpStrength: -6.5,
+    gravity: 0.3,
+    jumpStrength: -7.5,
     obstacles: [] as { x: number; gapY: number; passed: boolean }[],
-    obstacleWidth: 50,
-    obstacleGap: 250,
-    obstacleSpeed: 3,
+    obstacleWidth: 60,
+    obstacleGap: 320,
+    obstacleSpeed: 2,
     spawnTimer: 0,
     score: 0,
   });
@@ -37,7 +37,7 @@ export const FlappyBird: React.FC = () => {
       obstacles: [],
       spawnTimer: 0,
       score: 0,
-      obstacleGap: 250, // Reset gap
+      obstacleGap: 320, // Reset gap
     };
     setScore(0);
     setStatus("PLAYING");
@@ -108,11 +108,19 @@ export const FlappyBird: React.FC = () => {
 
     // Obstacles
     state.spawnTimer++;
-    if (state.spawnTimer > 100) {
+    if (state.spawnTimer > 180) {
       // Spawn rate
       state.spawnTimer = 0;
-      const minGapY = 100;
-      const maxGapY = canvas.height - 100 - state.obstacleGap;
+
+      // Use 20% margin or minimum 100px to keep gameplay centered
+      const margin = Math.max(100, canvas.height * 0.2);
+      const minGapY = margin;
+      // Ensure maxGapY is at least minGapY (fallback for small screens)
+      const maxGapY = Math.max(
+        minGapY,
+        canvas.height - margin - state.obstacleGap
+      );
+
       const gapY = Math.floor(
         Math.random() * (maxGapY - minGapY + 1) + minGapY
       );
@@ -168,7 +176,7 @@ export const FlappyBird: React.FC = () => {
         state.score += 1;
 
         const reduction = Math.floor(state.score / 10) * 10;
-        state.obstacleGap = Math.max(100, 250 - reduction);
+        state.obstacleGap = Math.max(200, 320 - reduction);
 
         setScore((prev) => {
           const newScore = prev + 1;
