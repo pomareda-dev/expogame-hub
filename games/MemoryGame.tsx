@@ -125,10 +125,10 @@ export const MemoryGame: React.FC = () => {
     return (
       <GameLayout title="Memory Match">
         <div className="flex flex-col items-center justify-center h-full gap-8 animate-pop-in">
-          <h2 className="text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
             Select Difficulty
           </h2>
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md px-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md lg:max-w-6xl px-4">
             <Button
               onClick={() => {
                 setCards([]);
@@ -136,7 +136,7 @@ export const MemoryGame: React.FC = () => {
                 setStatus("PLAYING");
               }}
               size="lg"
-              className="flex-1 flex-col h-24 text-xl"
+              className="flex-1 flex-col h-24 text-xl lg:w-52"
             >
               <div>Easy</div>
               <div className="text-sm opacity-75 font-normal">(12 Cards)</div>
@@ -149,7 +149,7 @@ export const MemoryGame: React.FC = () => {
               }}
               size="lg"
               variant="secondary"
-              className="flex-1 flex-col h-24 text-xl"
+              className="flex-1 flex-col h-24 text-xl lg:w-64"
             >
               <div>Hard</div>
               <div className="text-sm opacity-75 font-normal">(16 Cards)</div>
@@ -162,7 +162,7 @@ export const MemoryGame: React.FC = () => {
               }}
               size="lg"
               variant="danger"
-              className="flex-1 flex-col h-24 text-xl"
+              className="flex-1 flex-col h-24 text-xl lg:w-52"
             >
               <div>Insane</div>
               <div className="text-sm opacity-75 font-normal">(24 Cards)</div>
