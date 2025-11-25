@@ -30,7 +30,7 @@ const games: GameConfig[] = [
   },
   {
     id: "catcher",
-    name: "Star Catcher",
+    name: "NovaTech Catcher",
     route: GameRoute.CATCHER,
     icon: <Target className="w-10 h-10 lg:w-20 lg:h-20 text-white" />,
     color: "bg-gradient-to-br from-sky-400 to-blue-600",
