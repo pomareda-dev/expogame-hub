@@ -2,126 +2,60 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>ExpoGame Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f172a; /* Slate 900 */
-        color: white;
-        overflow: hidden; /* Prevent body scroll for kiosk feel */
-        touch-action: none; /* Prevent rubber banding on iOS */
-      }
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-      /* Hide scrollbar for IE, Edge and Firefox */
-      .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
-      }
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
 
-      /* Custom Animations */
-      @keyframes blob {
-        0% { transform: translate(0px, 0px) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-        100% { transform: translate(0px, 0px) scale(1); }
-      }
-      .animate-blob {
-        animation: blob 7s infinite;
-      }
-      .animation-delay-2000 {
-        animation-delay: 2s;
-      }
-      .animation-delay-4000 {
-        animation-delay: 4s;
-      }
-
-      @keyframes slideUpFade {
-        0% { opacity: 0; transform: translateY(20px) scale(0.98); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-      }
-      .animate-slide-up {
-        animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-        20%, 40%, 60%, 80% { transform: translateX(4px); }
-      }
-      .animate-shake {
-        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-      }
-
-      @keyframes popIn {
-        0% { transform: scale(0.5); opacity: 0; }
-        70% { transform: scale(1.1); opacity: 1; }
-        100% { transform: scale(1); opacity: 1; }
-      }
-      .animate-pop-in {
-        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      }
-
-      /* Connect Four Drop Animation */
-      @keyframes dropBounce {
-        0% { transform: translateY(var(--drop-height)); opacity: 0; animation-timing-function: ease-in; }
-        20% { opacity: 1; }
-        60% { transform: translateY(0); animation-timing-function: ease-out; }
-        75% { transform: translateY(-25%); animation-timing-function: ease-in; }
-        90% { transform: translateY(0); animation-timing-function: ease-out; }
-        95% { transform: translateY(-5%); animation-timing-function: ease-in; }
-        100% { transform: translateY(0); }
-      }
-      .animate-drop {
-        animation: dropBounce 0.6s forwards;
-      }
-    </style>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
               brand: {
-                50: '#f0f9ff',
-                100: '#e0f2fe',
-                500: '#0ea5e9',
-                600: '#0284c7',
-                900: '#0c4a6e',
-              }
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                900: "#0c4a6e",
+              },
             },
             animation: {
-              'bounce-slight': 'bounce-slight 2s infinite',
+              "bounce-slight": "bounce-slight 2s infinite",
             },
             keyframes: {
-              'bounce-slight': {
-                '0%, 100%': { transform: 'translateY(-5%)' },
-                '50%': { transform: 'translateY(0)' },
-              }
-            }
-          }
+              "bounce-slight": {
+                "0%, 100%": { transform: "translateY(-5%)" },
+                "50%": { transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+          "react/": "https://aistudiocdn.com/react@^19.2.0/",
+          "react": "https://aistudiocdn.com/react@^19.2.0",
+          "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6"
         }
       }
     </script>
-  <script type="importmap">
-{
-  "imports": {
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+  </head>
   <body>
-    <div id="root" class="h-screen w-screen overflow-hidden bg-slate-900 text-white"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <div
+      id="root"
+      class="h-screen w-screen overflow-hidden bg-slate-900 text-white"
+    ></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

@@ -5,30 +5,34 @@ import { Button } from "../components/Button";
 import { GameStatus } from "../types";
 
 const LOGOS = [
-  "assets/logos/argus-logo.png",
-  "assets/logos/bitronics-logo.png",
-  "assets/logos/hermes-logo.png",
-  "assets/logos/kronos-logo.png",
-  "assets/logos/novatech-logo.png",
-  "assets/logos/orion-logo.png",
-  "assets/logos/w3ts-logo.png",
-  "assets/logos/server-logo.png",
+  "/assets/logos/argus-logo.png",
+  "/assets/logos/bitronics-logo.png",
+  "/assets/logos/hermes-logo.png",
+  "/assets/logos/kronos-logo.png",
+  "/assets/logos/novatech-logo.png",
+  "/assets/logos/orion-logo.png",
+  "/assets/logos/w3ts-logo.png",
+  "/assets/logos/server-logo.png",
 ];
+const LOGOS_WITH_BASE = LOGOS.map((path) => import.meta.env.BASE_URL + path);
 
 const DEVICES = [
-  "assets/devices/HERMES2000.png",
-  "assets/devices/KRONOS2P.png",
-  "assets/devices/KRONOS2R.png",
-  "assets/devices/KRONOS3R.png",
-  "assets/devices/ORIONIO.png",
-  "assets/devices/ORIONLX.png",
-  "assets/devices/ORIONLX+.png",
-  "assets/devices/ORIONLXM.png",
-  "assets/devices/ORIONMX.png",
-  "assets/devices/ORIONMX2S.png",
-  "assets/devices/ORIONMX4S.png",
-  "assets/devices/ORIONSX.png",
+  "/assets/devices/HERMES2000.png",
+  "/assets/devices/KRONOS2P.png",
+  "/assets/devices/KRONOS2R.png",
+  "/assets/devices/KRONOS3R.png",
+  "/assets/devices/ORIONIO.png",
+  "/assets/devices/ORIONLX.png",
+  "/assets/devices/ORIONLX+.png",
+  "/assets/devices/ORIONLXM.png",
+  "/assets/devices/ORIONMX.png",
+  "/assets/devices/ORIONMX2S.png",
+  "/assets/devices/ORIONMX4S.png",
+  "/assets/devices/ORIONSX.png",
 ];
+const DEVICES_WITH_BASE = DEVICES.map(
+  (path) => import.meta.env.BASE_URL + path
+);
 
 interface Card {
   id: number;
@@ -54,9 +58,9 @@ export const MemoryGame: React.FC = () => {
 
   const initializeDeck = () => {
     let iconsToUse: string[] = [];
-    if (difficulty === "EASY") iconsToUse = LOGOS.slice(0, 6);
-    else if (difficulty === "HARD") iconsToUse = LOGOS;
-    else iconsToUse = DEVICES;
+    if (difficulty === "EASY") iconsToUse = LOGOS_WITH_BASE.slice(0, 6);
+    else if (difficulty === "HARD") iconsToUse = LOGOS_WITH_BASE;
+    else iconsToUse = DEVICES_WITH_BASE;
     const deck = [...iconsToUse, ...iconsToUse]
       .sort(() => Math.random() - 0.5)
       .map((icon, index) => ({

@@ -54,7 +54,7 @@ export const Home: React.FC = () => {
       <header className="relative z-10 px-8 py-8 flex justify-between items-start">
         <div className="animate-slide-up" style={{ animationDelay: "0ms" }}>
           <img
-            src="assets/novatech.svg"
+            src={import.meta.env.BASE_URL + "assets/novatech.svg"}
             className="mb-4 w-[160px] sm:w-[200px] lg:w-[250px]"
             alt="Novatech"
           />
@@ -138,22 +138,22 @@ export const Home: React.FC = () => {
       >
         <div className="flex justify-center gap-8">
           <img
-            src="assets/orion-white.png"
+            src={import.meta.env.BASE_URL + "assets/orion-white.png"}
             className="w-24 opacity-15"
             alt="Orion"
           />
           <img
-            src="assets/kronos-white.png"
+            src={import.meta.env.BASE_URL + "assets/kronos-white.png"}
             className="w-24 opacity-15"
             alt="Kronos"
           />
           <img
-            src="assets/hermes-white.png"
+            src={import.meta.env.BASE_URL + "assets/hermes-white.png"}
             className="w-24 opacity-15"
             alt="Hermes"
           />
           <img
-            src="assets/bitronics-white.png"
+            src={import.meta.env.BASE_URL + "assets/bitronics-white.png"}
             className="w-24 opacity-15"
             alt="Bitronics"
           />
