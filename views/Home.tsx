@@ -8,7 +8,9 @@ const games: GameConfig[] = [
     id: "connect4",
     name: "Connect Four",
     route: GameRoute.CONNECT_FOUR,
-    icon: <Gamepad2 className="w-10 h-10 lg:w-20 lg:h-20 text-white" />,
+    icon: (
+      <Gamepad2 className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
+    ),
     color: "bg-gradient-to-br from-rose-500 to-rose-600",
     description: "Strategy Classic",
   },
@@ -16,7 +18,9 @@ const games: GameConfig[] = [
     id: "flappy",
     name: "Flappy Drone",
     route: GameRoute.FLAPPY_BIRD,
-    icon: <Ghost className="w-10 h-10 lg:w-20 lg:h-20 text-white" />,
+    icon: (
+      <Ghost className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
+    ),
     color: "bg-gradient-to-br from-amber-400 to-amber-600",
     description: "Tap to fly",
   },
@@ -24,7 +28,9 @@ const games: GameConfig[] = [
     id: "memory",
     name: "Memory Match",
     route: GameRoute.MEMORY,
-    icon: <Brain className="w-10 h-10 lg:w-20 lg:h-20 text-white" />,
+    icon: (
+      <Brain className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
+    ),
     color: "bg-gradient-to-br from-violet-500 to-purple-600",
     description: "Test your mind",
   },
@@ -32,7 +38,9 @@ const games: GameConfig[] = [
     id: "catcher",
     name: "NovaTech Catcher",
     route: GameRoute.CATCHER,
-    icon: <Target className="w-10 h-10 lg:w-20 lg:h-20 text-white" />,
+    icon: (
+      <Target className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
+    ),
     color: "bg-gradient-to-br from-sky-400 to-blue-600",
     description: "Reflex Challenge",
   },
@@ -51,14 +59,14 @@ export const Home: React.FC = () => {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 px-8 py-8 flex justify-between items-start">
+      <header className="relative z-10 px-4 lg:px-8 pt-8 pb-4 flex justify-between items-start">
         <div className="animate-slide-up" style={{ animationDelay: "0ms" }}>
           <img
-            src={import.meta.env.BASE_URL + "assets/novatech.svg"}
-            className="mb-4 w-[160px] sm:w-[200px] lg:w-[250px]"
+            src={import.meta.env.BASE_URL + "/assets/novatech.svg"}
+            className="mb-2 lg:mb-4 w-[140px] sm:w-[200px] lg:w-[250px]"
             alt="Novatech"
           />
-          <p className="text-slate-300 text-xs sm:text-sm lg:text-base mt-1 font-medium tracking-wide">
+          <p className="text-slate-300 text-[10px] sm:text-sm lg:text-base mt-1 font-medium tracking-wide">
             Interactive Experience Center
           </p>
         </div>
@@ -73,12 +81,12 @@ export const Home: React.FC = () => {
 
       {/* Grid */}
       <main className="flex-1 relative z-10 flex items-center justify-center p-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-6 lg:gap-9 max-w-5xl lg:max-w-3xl w-full perspective-1000">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-5 gap-4 md:gap-6 lg:gap-9 max-w-5xl lg:max-w-3xl xl:max-w-6xl w-full perspective-1000">
           {games.map((game, index) => (
             <button
               key={game.id}
               onClick={() => navigate(game.route)}
-              className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-slate-800/40 border border-white/5 hover:bg-slate-700/50 hover:border-white/20 transition-all duration-500 backdrop-blur-md hover:-translate-y-2 hover:shadow-2xl"
+              className="group relative flex flex-col items-center gap-4 p-4 md:p-6 rounded-3xl bg-slate-800/40 border border-white/5 hover:bg-slate-700/50 hover:border-white/20 transition-all duration-500 backdrop-blur-md hover:-translate-y-2 hover:shadow-2xl"
               style={{
                 animation: `slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
                 animationDelay: `${150 + index * 100}ms`,
@@ -91,14 +99,14 @@ export const Home: React.FC = () => {
               ></div>
 
               <div
-                className={`relative w-20 h-20 md:w-24 md:h-24 lg:w-40 lg:h-40 rounded-2xl ${game.color} flex items-center justify-center shadow-lg shadow-black/20 group-hover:shadow-xl group-hover:scale-110 transition-all duration-500 z-10`}
+                className={`relative w-20 h-20 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-32 xl:h-32 rounded-2xl ${game.color} flex items-center justify-center shadow-lg shadow-black/20 group-hover:shadow-xl group-hover:scale-110 transition-all duration-500 z-10`}
               >
                 <div className="transition-transform duration-500 group-hover:rotate-6">
                   {game.icon}
                 </div>
               </div>
               <div className="text-center relative z-10">
-                <h3 className="text-lg lg:text-2xl font-bold text-white mb-1 group-hover:text-brand-200 transition-colors">
+                <h3 className="text-sm lg:text-2xl xl:text-lg font-bold text-white mb-1 group-hover:text-brand-200 transition-colors">
                   {game.name}
                 </h3>
                 <div className="w-[180px] lg:w-[220px] h-6 overflow-hidden relative">
@@ -124,7 +132,7 @@ export const Home: React.FC = () => {
             <div className="w-20 h-20 md:w-24 md:h-24 lg:w-40 lg:h-40 rounded-2xl bg-slate-800/50 flex items-center justify-center grayscale opacity-50">
               <Info className="w-8 h-8 text-slate-400" />
             </div>
-            <span className="text-sm lg:text-base text-slate-500 font-medium uppercase tracking-widest">
+            <span className="text-sm lg:text-base text-slate-500 font-medium text-center uppercase tracking-widest">
               Coming Soon
             </span>
           </div>
@@ -133,32 +141,32 @@ export const Home: React.FC = () => {
 
       {/* Footer */}
       <footer
-        className="relative z-10 p-6 text-center animate-slide-up space-y-8"
+        className="relative z-10 p-2 lg:p-6 text-center animate-slide-up space-y-4 lg:space-y-8"
         style={{ animationDelay: "600ms" }}
       >
-        <div className="flex justify-center gap-8">
+        <div className="flex justify-center gap-4 lg:gap-8">
           <img
-            src={import.meta.env.BASE_URL + "assets/orion-white.png"}
-            className="w-24 opacity-15"
+            src={import.meta.env.BASE_URL + "/assets/orion-white.png"}
+            className="w-12 lg:w-24 opacity-15"
             alt="Orion"
           />
           <img
-            src={import.meta.env.BASE_URL + "assets/kronos-white.png"}
-            className="w-24 opacity-15"
+            src={import.meta.env.BASE_URL + "/assets/kronos-white.png"}
+            className="w-12 lg:w-24 opacity-15"
             alt="Kronos"
           />
           <img
-            src={import.meta.env.BASE_URL + "assets/hermes-white.png"}
-            className="w-24 opacity-15"
+            src={import.meta.env.BASE_URL + "/assets/hermes-white.png"}
+            className="w-12 lg:w-24 opacity-15"
             alt="Hermes"
           />
           <img
-            src={import.meta.env.BASE_URL + "assets/bitronics-white.png"}
-            className="w-24 opacity-15"
+            src={import.meta.env.BASE_URL + "/assets/bitronics-white.png"}
+            className="w-12 lg:w-24 opacity-15"
             alt="Bitronics"
           />
         </div>
-        <p className="text-slate-500 text-xs font-medium">
+        <p className="text-slate-600 text-xs font-medium">
           Designed for NovaTech with ❤️ by Alexander Pomareda • v1.0.0
         </p>
       </footer>
