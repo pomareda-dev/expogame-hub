@@ -127,7 +127,7 @@ export const MemoryGame: React.FC = () => {
 
   if (status === "IDLE") {
     return (
-      <GameLayout title="Memory Match">
+      <GameLayout title="Memory Match" className="-mt-28 lg:-mt-60 xl:-mt-12">
         <div className="flex flex-col items-center justify-center h-full gap-8 animate-pop-in">
           <h2 className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
             Select Difficulty
@@ -178,7 +178,7 @@ export const MemoryGame: React.FC = () => {
   }
 
   return (
-    <GameLayout title="Memory Match">
+    <GameLayout title="Memory Match" className="pb-12 lg:pb-24 xl:pb-2">
       <div className="flex flex-col items-center h-full w-full p-2 md:p-4">
         <div className="flex justify-between w-full max-w-6xl mb-4 px-2">
           <div className="bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10">
