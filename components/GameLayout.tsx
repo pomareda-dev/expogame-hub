@@ -7,12 +7,15 @@ interface GameLayoutProps {
   title: string;
   children: React.ReactNode;
   highScore?: number;
+  className?: string;
 }
 
 export const GameLayout: React.FC<GameLayoutProps> = ({
   title,
   children,
   highScore,
+  className = "",
+  ...props
 }) => {
   const navigate = useNavigate();
 
@@ -53,7 +56,10 @@ export const GameLayout: React.FC<GameLayoutProps> = ({
       </header>
 
       {/* Game Content Area */}
-      <main className="flex-1 relative overflow-hidden flex flex-col items-center justify-center">
+      <main
+        className={`flex-1 relative overflow-hidden flex flex-col items-center justify-center ${className}`}
+        {...props}
+      >
         {children}
       </main>
     </div>

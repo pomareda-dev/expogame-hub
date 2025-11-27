@@ -128,7 +128,7 @@ export const ConnectFour: React.FC = () => {
   };
 
   return (
-    <GameLayout title="Connect Four">
+    <GameLayout title="Connect Four" className="-mt-24 lg:-mt-60">
       <div className="flex flex-col items-center gap-6">
         <div className="bg-slate-800/50 px-6 py-2 rounded-full border border-white/10">
           <span className="text-slate-300 mr-2">Current Turn:</span>
