@@ -3,6 +3,30 @@ import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { GameStatus } from "../types";
 
+const getResponsiveValues = (width: number, height: number) => {
+  // Reference dimensions (e.g., typical desktop game area)
+  const isMobile = width < 600; // Mobile breakpoint
+
+  const refWidth = isMobile ? 450 : 1200;
+  const refHeight = 800;
+
+  // Calculate scales with limits to prevent game from becoming unplayable
+  const wScale = Math.max(
+    Math.min(width / refWidth, 1.2),
+    isMobile ? 0.6 : 0.5
+  );
+  const hScale = Math.max(Math.min(height / refHeight, 1.2), 0.5);
+
+  return {
+    birdSize: Math.round(20 * wScale),
+    gravity: 0.3 * hScale,
+    jumpStrength: -7.5 * hScale,
+    obstacleWidth: Math.round(60 * wScale),
+    obstacleGap: Math.round((isMobile ? 220 : 320) * hScale),
+    obstacleSpeed: (isMobile ? 2.5 : 2) * wScale,
+  };
+};
+
 export const FlappyBird: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
@@ -16,13 +40,8 @@ export const FlappyBird: React.FC = () => {
   const gameState = useRef({
     birdY: 300,
     birdVelocity: 0,
-    birdSize: 20,
-    gravity: 0.3,
-    jumpStrength: -7.5,
+    ...getResponsiveValues(window.innerWidth, window.innerHeight), // Initial values
     obstacles: [] as { x: number; gapY: number; passed: boolean }[],
-    obstacleWidth: 60,
-    obstacleGap: 320,
-    obstacleSpeed: 2,
     spawnTimer: 0,
     score: 0,
   });
@@ -37,7 +56,11 @@ export const FlappyBird: React.FC = () => {
       obstacles: [],
       spawnTimer: 0,
       score: 0,
-      obstacleGap: 320, // Reset gap
+      // Recalculate gap on reset just in case
+      obstacleGap: getResponsiveValues(
+        canvasRef.current?.width || window.innerWidth,
+        canvasRef.current?.height || window.innerHeight
+      ).obstacleGap,
     };
     setScore(0);
     setStatus("PLAYING");
@@ -72,6 +95,15 @@ export const FlappyBird: React.FC = () => {
       if (parent) {
         canvas.width = parent.clientWidth;
         canvas.height = parent.clientHeight;
+
+        // Update game state with responsive values
+        const newValues = getResponsiveValues(canvas.width, canvas.height);
+        gameState.current.birdSize = newValues.birdSize;
+        gameState.current.gravity = newValues.gravity;
+        gameState.current.jumpStrength = newValues.jumpStrength;
+        gameState.current.obstacleWidth = newValues.obstacleWidth;
+        gameState.current.obstacleGap = newValues.obstacleGap;
+        gameState.current.obstacleSpeed = newValues.obstacleSpeed;
       }
     };
     window.addEventListener("resize", resize);
@@ -176,7 +208,12 @@ export const FlappyBird: React.FC = () => {
         state.score += 1;
 
         const reduction = Math.floor(state.score / 10) * 10;
-        state.obstacleGap = Math.max(200, 320 - reduction);
+        const { obstacleGap: baseGap } = getResponsiveValues(
+          canvas.width,
+          canvas.height
+        );
+        const minGap = Math.max(100, baseGap * 0.625); // 200/320 = 0.625
+        state.obstacleGap = Math.max(minGap, baseGap - reduction);
 
         setScore((prev) => {
           const newScore = prev + 1;
