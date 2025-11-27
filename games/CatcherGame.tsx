@@ -180,7 +180,7 @@ export const CatcherGame: React.FC = () => {
     ctx.fillStyle = "#38bdf8";
     ctx.fillRect(
       state.basketX,
-      canvas.height - 50,
+      canvas.height - 80,
       state.basketWidth,
       state.basketHeight
     );
@@ -188,7 +188,7 @@ export const CatcherGame: React.FC = () => {
     ctx.fillStyle = "#0ea5e9";
     ctx.fillRect(
       state.basketX + 5,
-      canvas.height - 45,
+      canvas.height - 75,
       state.basketWidth - 10,
       5
     );
@@ -206,7 +206,7 @@ export const CatcherGame: React.FC = () => {
     // UI Text if IDLE
     if (status === "IDLE") {
       ctx.fillStyle = "white";
-      ctx.font = "20px Inter";
+      ctx.font = "18px Inter";
       ctx.textAlign = "center";
       ctx.fillText("Drag to move basket", canvas.width / 2, canvas.height / 2);
       ctx.fillText(
@@ -233,13 +233,13 @@ export const CatcherGame: React.FC = () => {
 
   return (
     <GameLayout title="Star Catcher" highScore={highScore}>
-      <div className="absolute top-20 lg:top-10 w-full flex justify-between px-8 z-10 max-w-3xl mx-auto pointer-events-none">
+      <div className="absolute top-6 lg:top-10 w-full flex justify-between px-8 z-10 max-w-3xl mx-auto pointer-events-none">
         <div className="flex gap-4">
-          <div className="bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10 text-white font-mono font-bold shadow-lg">
+          <div className="bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10 text-white text-sm lg:text-base font-mono font-bold shadow-lg">
             Score: {score}
           </div>
           <div
-            className={`bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10 font-mono font-bold shadow-lg transition-colors ${
+            className={`bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10 text-sm lg:text-base font-mono font-bold shadow-lg transition-colors ${
               timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-white"
             }`}
           >
