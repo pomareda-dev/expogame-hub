@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { GameStatus } from "../types";
+import { useGameSettings } from "../utils/gameSettings";
 
-const ROWS = 6;
-const COLS = 7;
 type Player = 1 | 2 | null; // 1: Red, 2: Green
 
 export const ConnectFour: React.FC = () => {
+  const { settings } = useGameSettings();
+  const { rows: ROWS, cols: COLS, marginTop } = settings.connectFour;
+
   const [board, setBoard] = useState<Player[][]>([]);
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
   const [status, setStatus] = useState<GameStatus>("PLAYING");
@@ -21,7 +23,7 @@ export const ConnectFour: React.FC = () => {
 
   useEffect(() => {
     initGame();
-  }, []);
+  }, [ROWS, COLS]); // Re-init if settings change
 
   const initGame = () => {
     const newBoard = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
@@ -129,7 +131,10 @@ export const ConnectFour: React.FC = () => {
 
   return (
     <GameLayout title="Connect Four" className="-mt-24 lg:-mt-60 xl:mt-0">
-      <div className="flex flex-col items-center gap-6">
+      <div
+        className="flex flex-col items-center gap-6 transition-all duration-300"
+        style={{ marginTop: `${marginTop}px` }}
+      >
         <div className="bg-slate-800/50 px-6 py-2 rounded-full border border-white/10">
           <span className="text-slate-300 mr-2">Current Turn:</span>
           <span
@@ -143,7 +148,12 @@ export const ConnectFour: React.FC = () => {
 
         <div className="bg-blue-800 p-2 lg:p-6 rounded-xl">
           <div className="p-4 sm:p-6 lg:p-10 xl:p-8 bg-zinc-50 rounded-xl shadow-2xl shadow-blue-900/50 border-4 border-blue-700 relative">
-            <div className="grid grid-cols-7 gap-4 sm:gap-6 md:gap-9 lg:gap-16 xl:gap-10 relative z-10">
+            <div
+              className="grid gap-4 sm:gap-6 md:gap-9 lg:gap-16 xl:gap-10 relative z-10"
+              style={{
+                gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
+              }}
+            >
               {/* Clickable columns logic */}
               {Array.from({ length: COLS }).map((_, colIndex) => (
                 <div

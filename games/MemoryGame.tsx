@@ -3,6 +3,7 @@ import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { Button } from "../components/Button";
 import { GameStatus } from "../types";
+import { useGameSettings } from "../utils/gameSettings";
 
 const LOGOS = [
   "assets/logos/argus-logo.png",
@@ -42,6 +43,9 @@ interface Card {
 }
 
 export const MemoryGame: React.FC = () => {
+  const { settings } = useGameSettings();
+  const { padding } = settings.memory;
+
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -179,7 +183,10 @@ export const MemoryGame: React.FC = () => {
 
   return (
     <GameLayout title="Memory Match" className="pb-12 lg:pb-24 xl:pb-2">
-      <div className="flex flex-col items-center h-full w-full p-2 md:p-4">
+      <div
+        className="flex flex-col items-center h-full w-full"
+        style={{ padding: `${padding}px` }}
+      >
         <div className="flex justify-between w-full max-w-6xl mb-4 px-2">
           <div className="bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10">
             <span className="text-slate-400 text-sm uppercase font-bold mr-2">

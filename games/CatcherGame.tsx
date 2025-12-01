@@ -2,13 +2,17 @@ import React, { useRef, useEffect, useState } from "react";
 import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { GameStatus } from "../types";
+import { useGameSettings } from "../utils/gameSettings";
 
 export const CatcherGame: React.FC = () => {
+  const { settings } = useGameSettings();
+  const { fallSpeed, maxTime } = settings.catcher;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
   const [status, setStatus] = useState<GameStatus>("IDLE");
   const [lives, setLives] = useState(3);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(maxTime);
   const [highScore, setHighScore] = useState(() => {
     const saved = localStorage.getItem("catcher_best");
     return saved ? parseInt(saved, 10) : 0;
@@ -21,6 +25,13 @@ export const CatcherGame: React.FC = () => {
     img.src = import.meta.env.BASE_URL + "assets/novatech-white.svg";
     starImg.current = img;
   }, []);
+
+  // Update time left if maxTime setting changes while IDLE
+  useEffect(() => {
+    if (status === "IDLE") {
+      setTimeLeft(maxTime);
+    }
+  }, [maxTime, status]);
 
   const gameState = useRef({
     basketX: 0,
@@ -40,7 +51,7 @@ export const CatcherGame: React.FC = () => {
   const initGame = () => {
     setScore(0);
     setLives(3);
-    setTimeLeft(60);
+    setTimeLeft(maxTime);
     setStatus("PLAYING");
     gameState.current.items = [];
     gameState.current.spawnTimer = 0;
@@ -109,7 +120,7 @@ export const CatcherGame: React.FC = () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, [status, lives, highScore]);
+  }, [status, lives, highScore, fallSpeed]); // Added fallSpeed dependency
 
   const update = (canvas: HTMLCanvasElement) => {
     const state = gameState.current;
@@ -124,7 +135,7 @@ export const CatcherGame: React.FC = () => {
         x: Math.random() * (canvas.width - 50),
         y: -50,
         type,
-        speed: Math.random() * 2 + 3,
+        speed: Math.random() * 2 + fallSpeed, // Use setting as base speed
       });
     }
 

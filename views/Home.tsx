@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameRoute, GameConfig } from "../types";
-import { Gamepad2, Ghost, Brain, Target, Info } from "lucide-react";
+import { Gamepad2, Ghost, Brain, Target, Info, Settings } from "lucide-react";
+import { SettingsModal } from "../components/SettingsModal";
 
 const games: GameConfig[] = [
   {
@@ -48,6 +49,7 @@ const games: GameConfig[] = [
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
     <div className="min-h-screen w-full bg-slate-900 relative overflow-hidden flex flex-col">
@@ -70,12 +72,21 @@ export const Home: React.FC = () => {
             Interactive Experience Center
           </p>
         </div>
-        <div
-          className="px-3 md:px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 text-xs font-mono text-slate-200 flex items-center gap-2 shadow-lg animate-slide-up"
-          style={{ animationDelay: "100ms" }}
-        >
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
-          SYSTEM ONLINE
+        <div className="flex gap-4">
+          <div
+            className="px-3 md:px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 text-xs font-mono text-slate-200 flex items-center gap-2 shadow-lg animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
+            SYSTEM ONLINE
+          </div>
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 text-slate-200 hover:bg-white/10 hover:text-white transition-all animate-slide-up"
+            style={{ animationDelay: "150ms" }}
+          >
+            <Settings className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
@@ -170,6 +181,10 @@ export const Home: React.FC = () => {
           Designed for NovaTech with ❤️ by Alexander Pomareda • v1.0.0
         </p>
       </footer>
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };
