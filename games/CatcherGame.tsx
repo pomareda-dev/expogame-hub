@@ -18,7 +18,7 @@ export const CatcherGame: React.FC = () => {
 
   useEffect(() => {
     const img = new Image();
-    img.src = import.meta.env.BASE_URL + "/assets/novatech-white.svg";
+    img.src = import.meta.env.BASE_URL + "assets/novatech-white.svg";
     starImg.current = img;
   }, []);
 

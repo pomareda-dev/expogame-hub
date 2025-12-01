@@ -62,7 +62,7 @@ export const Home: React.FC = () => {
       <header className="relative z-10 px-4 lg:px-8 pt-8 pb-4 flex justify-between items-start">
         <div className="animate-slide-up" style={{ animationDelay: "0ms" }}>
           <img
-            src={import.meta.env.BASE_URL + "/assets/novatech.svg"}
+            src={import.meta.env.BASE_URL + "assets/novatech.svg"}
             className="mb-2 lg:mb-4 w-[140px] sm:w-[200px] lg:w-[250px]"
             alt="Novatech"
           />
@@ -146,22 +146,22 @@ export const Home: React.FC = () => {
       >
         <div className="flex justify-center gap-4 lg:gap-8">
           <img
-            src={import.meta.env.BASE_URL + "/assets/orion-white.png"}
+            src={import.meta.env.BASE_URL + "assets/orion-white.png"}
             className="w-12 lg:w-24 opacity-15"
             alt="Orion"
           />
           <img
-            src={import.meta.env.BASE_URL + "/assets/kronos-white.png"}
+            src={import.meta.env.BASE_URL + "assets/kronos-white.png"}
             className="w-12 lg:w-24 opacity-15"
             alt="Kronos"
           />
           <img
-            src={import.meta.env.BASE_URL + "/assets/hermes-white.png"}
+            src={import.meta.env.BASE_URL + "assets/hermes-white.png"}
             className="w-12 lg:w-24 opacity-15"
             alt="Hermes"
           />
           <img
-            src={import.meta.env.BASE_URL + "/assets/bitronics-white.png"}
+            src={import.meta.env.BASE_URL + "assets/bitronics-white.png"}
             className="w-12 lg:w-24 opacity-15"
             alt="Bitronics"
           />

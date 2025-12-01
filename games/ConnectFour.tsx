@@ -190,7 +190,7 @@ export const ConnectFour: React.FC = () => {
           <div className="flex justify-center py-3 lg:pt-5">
             <div className="flex items-center gap-2">
               <img
-                src={import.meta.env.BASE_URL + "/assets/orion-white.png"}
+                src={import.meta.env.BASE_URL + "assets/orion-white.png"}
                 className="w-12 h-12"
                 alt="Orion"
               />
