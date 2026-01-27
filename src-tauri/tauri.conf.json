@@ -1,13 +1,13 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "ExpoGame Hub",
+  "productName": "ExpoGame-Hub",
   "version": "1.1.0",
   "identifier": "com.novatech.gamehub",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3000",
     "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build:web"
+    "beforeBuildCommand": "npm run build:tauri"
   },
   "app": {
     "windows": [

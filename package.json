@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:web": "vite build --mode tauri",
+    "build": "vite build",
+    "build:tauri": "vite build --mode tauri",
     "dev:desktop": "tauri dev",
-    "build:desktop": "npm run build:web && tauri build",
+    "build:desktop": "npm run build:tauri && tauri build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "lucide-react": "^0.554.0",
