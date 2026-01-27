@@ -32,11 +32,13 @@ The ExpoGame Hub serves as an interactive entertainment platform for NovaTech ex
 
 - **gh-pages 6.3.0** - GitHub Pages deployment
 - **vite-plugin-pwa 1.1.0** - Progressive Web App support
+- **Tauri 2.0+** - Framework for building desktop applications with Rust
 
 ## 📁 Project Structure
 
 ```
 expogame-hub/
+├── src-tauri/           # Tauri (Desktop) configuration and source
 ├── components/          # Reusable UI components
 │   ├── Button.tsx
 │   ├── GameLayout.tsx
@@ -54,7 +56,8 @@ expogame-hub/
 ├── index.tsx           # Application entry point
 ├── index.css           # Global styles
 ├── types.ts            # TypeScript type definitions
-└── vite.config.ts      # Vite configuration
+├── vite.config.ts      # Vite configuration
+└── package.json        # Node dependencies and scripts
 ```
 
 ## 🚀 Getting Started
@@ -63,6 +66,7 @@ expogame-hub/
 
 - Node.js (v18 or higher recommended)
 - npm or yarn package manager
+- **Desktop (Tauri) Prerequisites:** [Rust and System Dependencies](https://tauri.app/v1/guides/getting-started/prerequisites) (only needed for building the desktop version)
 
 ### Installation
 
@@ -94,6 +98,14 @@ The application will be available at `http://localhost:5173` (or another port if
 - 🔍 TypeScript type checking
 - 🎨 Tailwind CSS with JIT compilation
 - 📱 Responsive design testing
+
+### Desktop Development (Tauri)
+
+To run the desktop version in development mode:
+
+```bash
+npm run dev:desktop
+```
 
 ## 🏗️ Build & Deployment
 
@@ -130,6 +142,20 @@ This command:
 3. Makes the app available at: `https://pomareda-dev.github.io/expogame-hub/`
 
 **Note:** Ensure the `homepage` field in `package.json` matches your GitHub Pages URL.
+
+### Build and Package Desktop (Tauri)
+
+To generate the installer for your operating system:
+
+```bash
+npm run build:desktop
+```
+
+This command will:
+
+1. Build the frontend with Tauri-specific configurations (`npm run build:web`).
+2. Compile the Rust backend and package the application into an installer (e.g., .msi for Windows).
+3. The resulting installer will be in `src-tauri/target/release/bundle/`.
 
 ## 🌐 Live Demo
 

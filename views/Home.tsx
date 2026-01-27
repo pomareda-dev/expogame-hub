@@ -178,7 +178,7 @@ export const Home: React.FC = () => {
           />
         </div>
         <p className="text-slate-600 text-xs font-medium">
-          Designed for NovaTech with ❤️ by Alexander Pomareda • v1.0.0
+          Designed for NovaTech with ❤️ by Alexander Pomareda • v1.1.0
         </p>
       </footer>
       <SettingsModal
