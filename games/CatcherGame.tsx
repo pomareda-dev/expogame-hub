@@ -131,8 +131,13 @@ export const CatcherGame: React.FC = () => {
       // Spawn rate
       state.spawnTimer = 0;
       const type = Math.random() > 0.2 ? "good" : "bad";
+
+      // Limit spawn zone to 1200px centered
+      const spawnZoneWidth = Math.min(canvas.width - 70, 1200);
+      const spawnZoneStart = (canvas.width - spawnZoneWidth) / 2;
+
       state.items.push({
-        x: Math.random() * (canvas.width - 50),
+        x: spawnZoneStart + Math.random() * spawnZoneWidth,
         y: -50,
         type,
         speed: Math.random() * 2 + fallSpeed, // Use setting as base speed
@@ -193,7 +198,7 @@ export const CatcherGame: React.FC = () => {
       state.basketX,
       canvas.height - 80,
       state.basketWidth,
-      state.basketHeight
+      state.basketHeight,
     );
     // Basket detail
     ctx.fillStyle = "#0ea5e9";
@@ -201,7 +206,7 @@ export const CatcherGame: React.FC = () => {
       state.basketX + 5,
       canvas.height - 75,
       state.basketWidth - 10,
-      5
+      5,
     );
 
     // Items
@@ -223,7 +228,7 @@ export const CatcherGame: React.FC = () => {
       ctx.fillText(
         "Catch NovaTech and Avoid Bombs 💣",
         canvas.width / 2,
-        canvas.height / 2 + 30
+        canvas.height / 2 + 30,
       );
 
       // Start Button Visual

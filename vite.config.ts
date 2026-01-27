@@ -12,45 +12,46 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
-      VitePWA({
-        registerType: "autoUpdate",
-        includeAssets: [
-          "assets/favicon.ico",
-          "assets/apple-touch-icon.png",
-          "assets/masked-icon.svg",
-        ],
-        manifest: {
-          name: "NovaTech Games Hub",
-          short_name: "NovaGames",
-          description: "Interactive Experience Center for NovaTech",
-          theme_color: "#0f172a",
-          background_color: "#0f172a",
-          display: "standalone",
-          icons: [
-            {
-              src: "assets/pwa-192x192.png",
-              sizes: "192x192",
-              type: "image/png",
-            },
-            {
-              src: "assets/pwa-512x512.png",
-              sizes: "512x512",
-              type: "image/png",
-            },
-            {
-              src: "assets/pwa-512x512.png",
-              sizes: "512x512",
-              type: "image/png",
-              purpose: "any maskable",
-            },
+      mode !== "tauri" &&
+        VitePWA({
+          registerType: "autoUpdate",
+          includeAssets: [
+            "assets/favicon.ico",
+            "assets/apple-touch-icon.png",
+            "assets/masked-icon.svg",
           ],
-        },
-        workbox: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
-        },
-      }),
-    ],
-    base: "./",
+          manifest: {
+            name: "NovaTech Games Hub",
+            short_name: "NovaGames",
+            description: "Interactive Experience Center for NovaTech",
+            theme_color: "#0f172a",
+            background_color: "#0f172a",
+            display: "standalone",
+            icons: [
+              {
+                src: "assets/pwa-192x192.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+              {
+                src: "assets/pwa-512x512.png",
+                sizes: "512x512",
+                type: "image/png",
+              },
+              {
+                src: "assets/pwa-512x512.png",
+                sizes: "512x512",
+                type: "image/png",
+                purpose: "any maskable",
+              },
+            ],
+          },
+          workbox: {
+            globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+          },
+        }),
+    ].filter(Boolean),
+    base: mode === "tauri" ? "./" : "/expogame-hub/",
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),
