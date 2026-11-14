@@ -18,7 +18,7 @@ Use the existing `@/` import alias for paths from the repository root where appr
 
 - `HashRouter` is intentional: it supports direct navigation on the GitHub Pages deployment. Keep routes in `types.ts` synchronized with route declarations in `App.tsx` and launcher entries in `views/Home.tsx`.
 - The web build uses `/expogame-hub/` as its Vite base path; the Tauri build uses `./`. When changing deployment or asset paths, check `vite.config.ts`, `package.json`, and Tauri configuration together. Reference public assets through the existing Vite base URL pattern.
-- Styling uses Tailwind CSS 4 through `@tailwindcss/postcss`; `index.css` imports Tailwind with `@import "tailwindcss"` and loads `tailwind.config.js` with `@config`. Preserve this setup rather than reverting to Tailwind 3/PostCSS directives.
+- Styling uses Tailwind CSS 4 through `@tailwindcss/postcss`; `index.css` imports Tailwind with `@import "tailwindcss"` and declares the project tokens (brand colors and the `animate-bounce-slight` animation) inside an `@theme` block. There is no `tailwind.config.js`: Tailwind 4 auto-detects content sources, so add or change design tokens in that `@theme` block instead of reintroducing a JS config.
 - Game settings and best scores are persisted in browser `localStorage`. Preserve existing keys and stored-data compatibility unless a change explicitly requires a migration. Check mobile touch behavior when changing game input or global styles.
 - The PWA plugin is enabled for web builds and disabled in Tauri mode. Verify any icon or static-asset paths you change against files in `public/assets/`.
 
