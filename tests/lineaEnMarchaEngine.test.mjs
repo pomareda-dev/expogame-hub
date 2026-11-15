@@ -112,3 +112,45 @@ test("a round should end early only when the line health is exhausted", () => {
   assert.equal(engine.shouldEndRound(1), false);
   assert.equal(engine.shouldEndRound(0), true);
 });
+
+test("travel seconds stay bounded and never increase across levels", () => {
+  let previous = Infinity;
+  for (let level = 1; level <= 100; level += 1) {
+    const travel = engine.getStationTravelSeconds(level);
+    assert.ok(travel >= engine.MIN_STATION_TRAVEL_SECONDS && travel <= 8);
+    assert.ok(travel <= previous);
+    previous = travel;
+  }
+  assert.equal(
+    engine.getStationTravelSeconds(1000),
+    engine.MIN_STATION_TRAVEL_SECONDS,
+  );
+});
+
+test("distractor count boundaries follow levels", () => {
+  assert.equal(engine.getDistractorCount(1), 0);
+  assert.equal(engine.getDistractorCount(2), 0);
+  assert.equal(engine.getDistractorCount(3), 1);
+  assert.equal(engine.getDistractorCount(4), 1);
+  assert.equal(engine.getDistractorCount(5), 2);
+  assert.equal(engine.getDistractorCount(100), 2);
+});
+
+test("wrong, distractor, duplicate and post-complete taps return the same station reference", () => {
+  const station = engine.createStation(3, 1, seededRandom(7));
+  for (const wrong of ["manual", "battery", "actuator", "controller"]) {
+    assert.strictEqual(engine.placeStationPiece(station, wrong), station);
+  }
+  let current = engine.placeStationPiece(station, "sensor");
+  assert.strictEqual(engine.placeStationPiece(current, "sensor"), current);
+  current = engine.placeStationPiece(current, "controller");
+  current = engine.placeStationPiece(current, "actuator");
+  assert.equal(engine.isStationComplete(current), true);
+  assert.strictEqual(engine.placeStationPiece(current, "sensor"), current);
+});
+
+test("penalties clamp to the health band and ignore negative penalties", () => {
+  assert.equal(engine.applyPenalty(150, 20), 100);
+  assert.equal(engine.applyPenalty(100, -5), 100);
+  assert.equal(engine.applyPenalty(7, 10), 0);
+});

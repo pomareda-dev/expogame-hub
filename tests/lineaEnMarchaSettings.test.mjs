@@ -101,3 +101,10 @@ test("the configured round length falls back to 60 seconds when unusable", () =>
     60,
   );
 });
+
+test("the configured round length rounds and rejects non-finite or non-numeric values", () => {
+  assert.equal(settingsModel.getLineaEnMarchaRoundSeconds({ lineaEnMarcha: { maxTime: 2.6 } }), 3);
+  assert.equal(settingsModel.getLineaEnMarchaRoundSeconds({ lineaEnMarcha: { maxTime: Infinity } }), 60);
+  assert.equal(settingsModel.getLineaEnMarchaRoundSeconds({ lineaEnMarcha: { maxTime: "40" } }), 60);
+  assert.equal(settingsModel.getLineaEnMarchaRoundSeconds({ lineaEnMarcha: null }), 60);
+});
