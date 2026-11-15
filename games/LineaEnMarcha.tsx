@@ -14,28 +14,23 @@ import { GameLayout } from "../components/GameLayout";
 import {
   AUTOMATION_SEQUENCE,
   MISSED_STATION_PENALTY,
+  SHIP_PAUSE_MS,
   WRONG_TAP_PENALTY,
-  applyPenalty,
-  createStation,
+  advanceShip,
+  createRound,
   getInitialHealth,
-  getStationScore,
-  getStationTravelSeconds,
-  isStationComplete,
+  getRoundSecondsLeft,
   isStationPiecePlaced,
-  placeStationPiece,
-  shouldEndRound,
-  type LineaStation,
+  tapPiece as tapRoundPiece,
+  tickRound,
+  type LineaRound,
+  type RoundStatus,
   type StationPiece,
 } from "./lineaEnMarchaEngine";
 import { getLineaEnMarchaRoundSeconds, useGameSettings } from "../utils/gameSettings";
 
-// Keep the completed station visible long enough to read the shipped state.
-const SHIP_PAUSE_MS = 600;
 const BEST_SCORE_KEY = "linea_en_marcha_best";
-const STATIONS_PER_LEVEL = 3;
 const DEVICE_IMAGE_BASE = `${import.meta.env.BASE_URL}assets/devices/`;
-
-type RoundStatus = "READY" | "PLAYING" | "GAME_OVER";
 
 interface PieceMeta {
   label: string;
@@ -102,93 +97,74 @@ const getHealthBarClass = (health: number): string => {
 export const LineaEnMarcha: React.FC = () => {
   const { settings } = useGameSettings();
   const roundSeconds = getLineaEnMarchaRoundSeconds(settings);
-  const [status, setStatus] = useState<RoundStatus>("READY");
-  const [station, setStation] = useState<LineaStation | null>(null);
-  const [level, setLevel] = useState(1);
-  const [score, setScore] = useState(0);
+  // The engine owns the round lifecycle; the component owns timers and UI copy.
+  const [round, setRound] = useState<LineaRound | null>(null);
   const [bestScore, setBestScore] = useState(readBestScore);
-  const [health, setHealth] = useState(getInitialHealth);
-  const [stationsShipped, setStationsShipped] = useState(0);
-  const [missedStations, setMissedStations] = useState(0);
   const [timeLeft, setTimeLeft] = useState(roundSeconds);
-  const [travelProgress, setTravelProgress] = useState(0);
-  const [shipping, setShipping] = useState(false);
   const [announcement, setAnnouncement] = useState("");
-  const deadline = useRef<number | null>(null);
-  const stationDeadline = useRef<number | null>(null);
-  const stationTravelMs = useRef(1);
-  const stationNumber = useRef(0);
+  const roundRef = useRef<LineaRound | null>(null);
+  const shipTimer = useRef<number | null>(null);
+
+  const status: RoundStatus = round?.status ?? "READY";
+  const level = round?.level ?? 1;
+  const score = round?.score ?? 0;
+  const health = round?.health ?? getInitialHealth();
+  const stationsShipped = round?.stationsShipped ?? 0;
+  const missedStations = round?.missedStations ?? 0;
+  const station = round?.station ?? null;
+  const shipping = round?.shipping ?? false;
+  const travelProgress = round?.stationProgress ?? 0;
+
+  const commitRound = (next: LineaRound) => {
+    roundRef.current = next;
+    setRound(next);
+  };
+
+  const clearShipTimer = () => {
+    if (shipTimer.current === null) return;
+    window.clearTimeout(shipTimer.current);
+    shipTimer.current = null;
+  };
 
   // Keep the idle clock in step with the configured round length.
   useEffect(() => {
     if (status !== "PLAYING") setTimeLeft(roundSeconds);
   }, [roundSeconds, status]);
 
-  const spawnStation = (nextLevel: number) => {
-    stationNumber.current += 1;
-    const travelMs = getStationTravelSeconds(nextLevel) * 1000;
-    stationTravelMs.current = travelMs;
-    stationDeadline.current = Date.now() + travelMs;
-    setTravelProgress(0);
-    setStation(createStation(nextLevel, stationNumber.current));
-  };
-
-  // Round clock: the run always ends when the configured time runs out.
+  // A pending ship pause never survives an unmount or the end of the run.
   useEffect(() => {
-    if (status !== "PLAYING" || deadline.current === null) return;
-
-    const timer = window.setInterval(() => {
-      const remaining = Math.max(
-        0,
-        Math.ceil((deadline.current! - Date.now()) / 1000),
-      );
-      setTimeLeft(remaining);
-      if (remaining === 0) {
-        deadline.current = null;
-        setStatus("GAME_OVER");
-      }
-    }, 250);
-
-    return () => window.clearInterval(timer);
+    if (status !== "PLAYING") clearShipTimer();
   }, [status]);
 
-  // Station clock: each station must be assembled before it exits the line.
+  useEffect(() => clearShipTimer, []);
+
+  // Round clock: one tick drives travel, misses, scoring state and the clock.
   useEffect(() => {
-    if (status !== "PLAYING" || !station || shipping) return;
-    if (stationDeadline.current === null) return;
+    if (status !== "PLAYING") return;
 
     const timer = window.setInterval(() => {
-      const remaining = stationDeadline.current! - Date.now();
-      const progress = Math.min(
-        1,
-        Math.max(0, 1 - remaining / stationTravelMs.current),
-      );
-      setTravelProgress(progress);
+      const current = roundRef.current;
+      if (!current) return;
 
-      if (remaining > 0) return;
+      const now = Date.now();
+      const next = tickRound(current, now);
 
-      window.clearInterval(timer);
-      stationDeadline.current = null;
-      setMissedStations((missed) => missed + 1);
-      const nextHealth = applyPenalty(health, MISSED_STATION_PENALTY);
-      setHealth(nextHealth);
-
-      if (shouldEndRound(nextHealth)) {
-        setStatus("GAME_OVER");
-        setAnnouncement(
-          `Station missed. Line health exhausted. -${MISSED_STATION_PENALTY} health.`,
-        );
-        return;
+      if (next !== current) {
+        commitRound(next);
+        if (next.missedStations > current.missedStations) {
+          setAnnouncement(
+            next.status === "GAME_OVER"
+              ? `Station missed. Line health exhausted. -${MISSED_STATION_PENALTY} health.`
+              : `Station missed. -${MISSED_STATION_PENALTY} line health. Next station arriving.`,
+          );
+        }
       }
 
-      setAnnouncement(
-        `Station missed. -${MISSED_STATION_PENALTY} line health. Next station arriving.`,
-      );
-      spawnStation(level);
+      setTimeLeft(getRoundSecondsLeft(next, now));
     }, 100);
 
     return () => window.clearInterval(timer);
-  }, [health, level, shipping, station, status]);
+  }, [status]);
 
   useEffect(() => {
     if (status !== "GAME_OVER" || score <= bestScore) return;
@@ -202,83 +178,72 @@ export const LineaEnMarcha: React.FC = () => {
   }, [bestScore, score, status]);
 
   // Hold the shipped station briefly, then send the next one down the line.
-  useEffect(() => {
-    if (!shipping) return;
+  const scheduleShipAdvance = () => {
+    clearShipTimer();
 
-    if (status !== "PLAYING") {
-      setShipping(false);
-      return;
-    }
+    shipTimer.current = window.setTimeout(() => {
+      shipTimer.current = null;
+      const latest = roundRef.current;
+      if (!latest || latest.status !== "PLAYING") return;
 
-    const timer = window.setTimeout(() => {
+      const now = Date.now();
+      const next = advanceShip(latest, now);
+
       // The round clock owns the run: never advance once time has run out.
-      if (deadline.current === null || Date.now() >= deadline.current) {
-        setShipping(false);
+      if (next.station === latest.station) {
+        if (next !== latest) commitRound(next);
         return;
       }
 
-      const levelUp = stationsShipped % STATIONS_PER_LEVEL === 0;
-      const nextLevel = levelUp ? level + 1 : level;
-      setLevel(nextLevel);
-      setShipping(false);
-      spawnStation(nextLevel);
+      commitRound(next);
       setAnnouncement(
-        levelUp
-          ? `Station shipped. Level ${nextLevel}. The line moves faster now.`
+        next.level > latest.level
+          ? `Station shipped. Level ${next.level}. The line moves faster now.`
           : "Station shipped. Next station arriving.",
       );
     }, SHIP_PAUSE_MS);
-
-    return () => window.clearTimeout(timer);
-  }, [level, shipping, stationsShipped, status]);
+  };
 
   const startRound = () => {
-    setScore(0);
-    setLevel(1);
-    setHealth(getInitialHealth());
-    setStationsShipped(0);
-    setMissedStations(0);
+    clearShipTimer();
     setTimeLeft(roundSeconds);
-    setShipping(false);
     setAnnouncement(
       `Line started. Place sensor, controller and actuator in order. You have ${roundSeconds} seconds.`,
     );
-    deadline.current = Date.now() + roundSeconds * 1000;
-    setStatus("PLAYING");
-    spawnStation(1);
+    commitRound(createRound(Date.now(), roundSeconds));
   };
 
   const tapPiece = (piece: StationPiece) => {
-    if (status !== "PLAYING" || !station || shipping) return;
+    if (!round) return;
 
-    const nextStation = placeStationPiece(station, piece);
-    if (nextStation === station) {
-      const nextHealth = applyPenalty(health, WRONG_TAP_PENALTY);
-      setHealth(nextHealth);
+    const { round: next, event } = tapRoundPiece(round, piece);
+    // Not playing, no station on the belt, or the shipped station is on hold.
+    if (next === round) return;
+
+    commitRound(next);
+
+    if (event === "rejected") {
       setAnnouncement(
         `${PIECE_META[piece].label} does not fit now. -${WRONG_TAP_PENALTY} line health.`,
       );
-      if (shouldEndRound(nextHealth)) {
-        setStatus("GAME_OVER");
-      }
       return;
     }
 
-    setStation(nextStation);
-
-    if (isStationComplete(nextStation)) {
-      setScore((currentScore) => currentScore + getStationScore(level));
-      setStationsShipped((shipped) => shipped + 1);
-      setShipping(true);
+    if (event === "shipped") {
       setAnnouncement(
-        `Station assembled. +${getStationScore(level)} points.`,
+        `Station assembled. +${next.score - round.score} points.`,
       );
+      scheduleShipAdvance();
       return;
     }
 
-    const expectedPiece = AUTOMATION_SEQUENCE[nextStation.placedCount];
+    const nextExpected = next.station
+      ? AUTOMATION_SEQUENCE[next.station.placedCount]
+      : null;
     setAnnouncement(
-      `${PIECE_META[piece].label} placed. ${PIECE_META[expectedPiece].label} next.`,
+      nextExpected
+        ? `${PIECE_META[piece].label} placed. ${PIECE_META[nextExpected].label} next.`
+        : `${PIECE_META[piece].label} placed.`,
     );
   };
 

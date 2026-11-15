@@ -135,3 +135,210 @@ export const isStationPiecePlaced = (
   const sequenceIndex = AUTOMATION_SEQUENCE.indexOf(piece);
   return sequenceIndex >= 0 && sequenceIndex < station.placedCount;
 };
+
+export type RoundStatus = "READY" | "PLAYING" | "GAME_OVER";
+
+/** Keep the completed station visible long enough to read the shipped state. */
+export const SHIP_PAUSE_MS = 600;
+
+/** Stations that must ship before the line speeds up. */
+export const STATIONS_PER_LEVEL = 3;
+
+export interface LineaRound {
+  status: RoundStatus;
+  level: number;
+  score: number;
+  /** Line health, 0..100. */
+  health: number;
+  stationsShipped: number;
+  missedStations: number;
+  station: LineaStation | null;
+  shipping: boolean;
+  /** Absolute epoch milliseconds at which the current station leaves the line. */
+  stationDeadlineMs: number;
+  stationTravelMs: number;
+  /** Travel progress of the current station, 0..1. */
+  stationProgress: number;
+  /** Absolute epoch milliseconds at which the run ends. */
+  roundDeadlineMs: number;
+  endedReason: "time" | "health" | null;
+  /** Engine-internal random source reused for later station spawns. */
+  random: () => number;
+}
+
+export interface TapPieceResult {
+  round: LineaRound;
+  event: "rejected" | "placed" | "shipped";
+}
+
+/**
+ * Build a fresh, timestamp-driven round. Every deadline is absolute so the
+ * caller only has to supply `Date.now()` on each tick.
+ */
+export const createRound = (
+  nowMs: number,
+  roundSeconds: number,
+  random: () => number = Math.random,
+): LineaRound => {
+  const travelMs = getStationTravelSeconds(1) * 1000;
+
+  return {
+    status: "PLAYING",
+    level: 1,
+    score: 0,
+    health: getInitialHealth(),
+    stationsShipped: 0,
+    missedStations: 0,
+    station: createStation(1, 1, random),
+    shipping: false,
+    stationDeadlineMs: nowMs + travelMs,
+    stationTravelMs: travelMs,
+    stationProgress: 0,
+    roundDeadlineMs: nowMs + roundSeconds * 1000,
+    endedReason: null,
+    random,
+  };
+};
+
+const travelProgressAt = (round: LineaRound, nowMs: number): number =>
+  clamp(1 - (round.stationDeadlineMs - nowMs) / round.stationTravelMs, 0, 1);
+
+const spawnRoundStation = (
+  round: LineaRound,
+  level: number,
+  id: number,
+  nowMs: number,
+): LineaRound => {
+  const travelMs = getStationTravelSeconds(level) * 1000;
+
+  return {
+    ...round,
+    station: createStation(level, id, round.random),
+    stationTravelMs: travelMs,
+    stationDeadlineMs: nowMs + travelMs,
+    stationProgress: 0,
+  };
+};
+
+/**
+ * Advance the round clock. Returns the same reference when nothing is due so
+ * callers can skip re-rendering.
+ */
+export const tickRound = (round: LineaRound, nowMs: number): LineaRound => {
+  if (round.status !== "PLAYING") return round;
+
+  // Freeze the travel bar during the ship pause: the station is already
+  // assembled, so its remaining travel time is no longer game state.
+  const stationProgress = round.shipping
+    ? round.stationProgress
+    : travelProgressAt(round, nowMs);
+
+  if (nowMs >= round.roundDeadlineMs) {
+    return {
+      ...round,
+      stationProgress,
+      shipping: false,
+      status: "GAME_OVER",
+      endedReason: "time",
+    };
+  }
+
+  const station = round.station;
+  if (station && !round.shipping && nowMs >= round.stationDeadlineMs) {
+    const health = applyPenalty(round.health, MISSED_STATION_PENALTY);
+    const missed = {
+      ...round,
+      stationProgress,
+      health,
+      missedStations: round.missedStations + 1,
+    };
+
+    if (shouldEndRound(health)) {
+      return {
+        ...missed,
+        shipping: false,
+        stationDeadlineMs: 0,
+        status: "GAME_OVER",
+        endedReason: "health",
+      };
+    }
+
+    return spawnRoundStation(missed, round.level, station.id + 1, nowMs);
+  }
+
+  if (stationProgress === round.stationProgress) return round;
+  return { ...round, stationProgress };
+};
+
+/** Try to place a piece, applying the wrong-tap health penalty when it fails. */
+export const tapPiece = (
+  round: LineaRound,
+  piece: StationPiece,
+): TapPieceResult => {
+  const station = round.station;
+  if (round.status !== "PLAYING" || !station || round.shipping) {
+    return { round, event: "rejected" };
+  }
+
+  const nextStation = placeStationPiece(station, piece);
+
+  if (nextStation === station) {
+    const health = applyPenalty(round.health, WRONG_TAP_PENALTY);
+    const rejected = { ...round, health };
+
+    return {
+      round: shouldEndRound(health)
+        ? { ...rejected, status: "GAME_OVER", endedReason: "health" }
+        : rejected,
+      event: "rejected",
+    };
+  }
+
+  if (isStationComplete(nextStation)) {
+    return {
+      round: {
+        ...round,
+        station: nextStation,
+        score: round.score + getStationScore(round.level),
+        stationsShipped: round.stationsShipped + 1,
+        shipping: true,
+      },
+      event: "shipped",
+    };
+  }
+
+  return { round: { ...round, station: nextStation }, event: "placed" };
+};
+
+/**
+ * End the ship pause and send the next station down the line. The round clock
+ * owns the run: once time is out the pause only clears the shipping flag.
+ */
+export const advanceShip = (
+  round: LineaRound,
+  nowMs: number,
+): LineaRound => {
+  if (round.status !== "PLAYING" || !round.shipping) return round;
+
+  if (nowMs >= round.roundDeadlineMs) {
+    return { ...round, shipping: false };
+  }
+
+  const level =
+    round.stationsShipped % STATIONS_PER_LEVEL === 0
+      ? round.level + 1
+      : round.level;
+  const nextId = (round.station?.id ?? 0) + 1;
+
+  return {
+    ...spawnRoundStation(round, level, nextId, nowMs),
+    level,
+    shipping: false,
+  };
+};
+
+/** Whole seconds left in the run, never negative. */
+export const getRoundSecondsLeft = (
+  round: LineaRound,
+  nowMs: number,
+): number => Math.max(0, Math.ceil((round.roundDeadlineMs - nowMs) / 1000));

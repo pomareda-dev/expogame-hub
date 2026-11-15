@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "node --test tests/circuitoExpressPuzzle.test.mjs tests/circuitoExpressSettings.test.mjs tests/lineaEnMarchaEngine.test.mjs tests/lineaEnMarchaSettings.test.mjs",
+    "test": "node --test tests/circuitoExpressPuzzle.test.mjs tests/circuitoExpressSettings.test.mjs tests/lineaEnMarchaEngine.test.mjs tests/lineaEnMarchaRound.test.mjs tests/lineaEnMarchaSettings.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
