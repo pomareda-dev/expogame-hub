@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@0.0.85", "--isolated"],
+      "enabled": true,
+      "description": "Drive a real Chromium browser: navigate the hub, inspect the accessibility tree, and debug E2E flows by hand."
+    }
+  }
+}
