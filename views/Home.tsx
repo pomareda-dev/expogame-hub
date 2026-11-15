@@ -9,6 +9,7 @@ import {
   Info,
   Settings,
   Zap,
+  Factory,
 } from "lucide-react";
 import { SettingsModal } from "../components/SettingsModal";
 
@@ -62,6 +63,16 @@ const games: GameConfig[] = [
     ),
     color: "bg-gradient-to-br from-emerald-400 to-teal-600",
     description: "Power the path",
+  },
+  {
+    id: "linea-en-marcha",
+    name: "Línea en Marcha",
+    route: GameRoute.LINEA_EN_MARCHA,
+    icon: (
+      <Factory className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
+    ),
+    color: "bg-gradient-to-br from-amber-400 to-orange-600",
+    description: "Keep the line running",
   },
 ];
 

@@ -7,6 +7,7 @@ export enum GameRoute {
   MEMORY = "/memory",
   CATCHER = "/catcher",
   CIRCUITO_EXPRESS = "/circuito-express",
+  LINEA_EN_MARCHA = "/linea-en-marcha",
 }
 
 export interface GameConfig {

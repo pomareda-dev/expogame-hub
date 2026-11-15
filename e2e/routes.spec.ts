@@ -11,6 +11,7 @@ const routes = [
   { path: '/memory', title: 'Memory Match' },
   { path: '/catcher', title: 'Star Catcher' },
   { path: '/circuito-express', title: 'Circuito Express' },
+  { path: '/linea-en-marcha', title: 'Línea en Marcha' },
 ];
 
 test.describe('game routes', () => {

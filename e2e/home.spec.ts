@@ -6,6 +6,7 @@ const launcherNames = [
   'Memory Match',
   'NovaTech Catcher',
   'Circuito Express',
+  'Línea en Marcha',
 ];
 
 test.describe('home launcher', () => {
