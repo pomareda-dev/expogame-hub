@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameRoute, GameConfig } from "../types";
-import { Gamepad2, Ghost, Brain, Target, Info, Settings } from "lucide-react";
+import {
+  Gamepad2,
+  Ghost,
+  Brain,
+  Target,
+  Info,
+  Settings,
+  Zap,
+} from "lucide-react";
 import { SettingsModal } from "../components/SettingsModal";
 
 const games: GameConfig[] = [
@@ -44,6 +52,16 @@ const games: GameConfig[] = [
     ),
     color: "bg-gradient-to-br from-sky-400 to-blue-600",
     description: "Reflex Challenge",
+  },
+  {
+    id: "circuito-express",
+    name: "Circuito Express",
+    route: GameRoute.CIRCUITO_EXPRESS,
+    icon: (
+      <Zap className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
+    ),
+    color: "bg-gradient-to-br from-emerald-400 to-teal-600",
+    description: "Power the path",
   },
 ];
 
