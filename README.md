@@ -10,7 +10,7 @@ NovaTech Games Hub is an interactive web experience for NovaTech exhibitions. Vi
 - **NovaTech Catcher** — catch falling items and avoid obstacles.
 - **Circuito Express** — rotate fictional wire tiles to connect a power source to a light before time runs out. It is an arcade puzzle, not a guide to real electrical wiring.
 
-Game settings and best scores are saved in the browser's local storage.
+Game settings and best scores are saved in the browser's local storage. The Game Settings dialog includes a Circuito Express tab where the round length (`Max Time`) can be changed from its 60-second default. Settings saved by earlier versions keep their stored values and pick up the new default automatically.
 
 ## Technology
 
@@ -65,7 +65,7 @@ npm run build
 npm run preview
 ```
 
-`npm test` runs the deterministic Circuito Express puzzle-logic tests with Node's built-in test runner. The production web bundle is written to `dist/`; no lint script is configured.
+`npm test` runs the deterministic Circuito Express tests with Node's built-in test runner: the puzzle-logic suite and the settings suite that covers backward-compatible defaults and the configured round length. The production web bundle is written to `dist/`; no lint script is configured.
 
 ### Run or build the desktop app
 

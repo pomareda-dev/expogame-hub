@@ -14,8 +14,13 @@ import {
   isCircuitComplete,
   rotatePuzzleTile,
 } from "./circuitoExpressPuzzle";
+import {
+  getCircuitoExpressRoundSeconds,
+  useGameSettings,
+} from "../utils/gameSettings";
 
-const ROUND_SECONDS = 60;
+// Keep the energized board visible long enough to read the light turning on.
+const IGNITION_DELAY_MS = 650;
 const BEST_SCORE_KEY = "circuito_express_best";
 const DIRECTIONS = [NORTH, EAST, SOUTH, WEST] as const;
 const CONNECTOR_ENDS: Record<number, [number, number]> = {
@@ -44,6 +49,8 @@ interface CircuitTileViewProps {
   row: number;
   column: number;
   powered: boolean;
+  igniting: boolean;
+  locked: boolean;
   onRotate: (row: number, column: number) => void;
 }
 
@@ -52,6 +59,8 @@ const CircuitTileView: React.FC<CircuitTileViewProps> = ({
   row,
   column,
   powered,
+  igniting,
+  locked,
   onRotate,
 }) => {
   const mask = getTileMask(tile);
@@ -73,6 +82,10 @@ const CircuitTileView: React.FC<CircuitTileViewProps> = ({
       : tile.kind === "spare"
         ? "border-slate-700 bg-slate-800/60"
         : "border-sky-900/70 bg-slate-800/90";
+  // The pulse is decorative motion: keep the lit state itself for reduced motion.
+  const ignitionClass = igniting
+    ? "ring-2 ring-emerald-300 shadow-[0_0_28px_rgba(74,222,128,0.55)] motion-safe:animate-pulse"
+    : "";
 
   const content = (
     <>
@@ -102,13 +115,25 @@ const CircuitTileView: React.FC<CircuitTileViewProps> = ({
         )}
       </svg>
       {(tile.kind === "source" || tile.kind === "bulb") && (
-        <span className="absolute inset-0 z-10 m-auto flex h-1/2 w-1/2 items-center justify-center rounded-full bg-slate-900 text-white shadow-md">
+        <span
+          className={`absolute inset-0 z-10 m-auto flex h-1/2 w-1/2 items-center justify-center rounded-full shadow-md ${
+            igniting
+              ? "bg-emerald-300 text-slate-950 shadow-[0_0_26px_rgba(74,222,128,0.9)]"
+              : "bg-slate-900 text-white"
+          }`}
+        >
           {tile.kind === "source" ? (
             <Zap aria-hidden="true" className="h-2/3 w-2/3 text-amber-300" />
           ) : (
             <Lightbulb
               aria-hidden="true"
-              className={`h-2/3 w-2/3 ${powered ? "text-emerald-300" : "text-slate-300"}`}
+              className={`h-2/3 w-2/3 ${
+                igniting
+                  ? "text-slate-950"
+                  : powered
+                    ? "text-emerald-300"
+                    : "text-slate-300"
+              }`}
             />
           )}
         </span>
@@ -133,7 +158,7 @@ const CircuitTileView: React.FC<CircuitTileViewProps> = ({
       <div
         role="img"
         aria-label={accessibilityLabel}
-        className={`relative aspect-square w-full overflow-hidden rounded-xl border ${surfaceClass}`}
+        className={`relative aspect-square w-full overflow-hidden rounded-xl border transition-shadow ${surfaceClass} ${ignitionClass}`}
       >
         {content}
       </div>
@@ -144,6 +169,7 @@ const CircuitTileView: React.FC<CircuitTileViewProps> = ({
     <button
       type="button"
       aria-label={accessibilityLabel}
+      aria-disabled={locked || undefined}
       onClick={() => onRotate(row, column)}
       className={`relative aspect-square w-full touch-manipulation overflow-hidden rounded-xl border transition-colors duration-150 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-300 ${surfaceClass}`}
     >
@@ -153,13 +179,17 @@ const CircuitTileView: React.FC<CircuitTileViewProps> = ({
 };
 
 export const CircuitoExpress: React.FC = () => {
+  const { settings } = useGameSettings();
+  const roundSeconds = getCircuitoExpressRoundSeconds(settings);
   const [status, setStatus] = useState<RoundStatus>("READY");
   const [puzzle, setPuzzle] = useState<CircuitPuzzle | null>(null);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(readBestScore);
   const [level, setLevel] = useState(1);
   const [moves, setMoves] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(ROUND_SECONDS);
+  const [completedCircuits, setCompletedCircuits] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(roundSeconds);
+  const [ignitingBulb, setIgnitingBulb] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const deadline = useRef<number | null>(null);
 
@@ -167,6 +197,11 @@ export const CircuitoExpress: React.FC = () => {
     () => (puzzle ? getPoweredTiles(puzzle) : new Set<string>()),
     [puzzle],
   );
+
+  // Keep the idle clock in step with the configured round length.
+  useEffect(() => {
+    if (status !== "PLAYING") setTimeLeft(roundSeconds);
+  }, [roundSeconds, status]);
 
   useEffect(() => {
     if (status !== "PLAYING" || deadline.current === null) return;
@@ -197,37 +232,63 @@ export const CircuitoExpress: React.FC = () => {
     }
   }, [bestScore, score, status]);
 
+  // Hold the energized board briefly, then move on to the next circuit.
+  useEffect(() => {
+    if (!ignitingBulb) return;
+
+    if (status !== "PLAYING") {
+      setIgnitingBulb(false);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      // The round clock owns the run: never advance once time has run out.
+      if (deadline.current === null || Date.now() >= deadline.current) {
+        setIgnitingBulb(false);
+        return;
+      }
+
+      const nextLevel = level + 1;
+      setLevel(nextLevel);
+      setMoves(0);
+      setPuzzle(createCircuitPuzzle(getBoardSize(nextLevel)));
+      setIgnitingBulb(false);
+      setAnnouncement(`Light on. Level ${nextLevel} started.`);
+    }, IGNITION_DELAY_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [ignitingBulb, level, status]);
+
   const startRound = () => {
     setScore(0);
     setLevel(1);
     setMoves(0);
-    setTimeLeft(ROUND_SECONDS);
+    setCompletedCircuits(0);
+    setTimeLeft(roundSeconds);
+    setIgnitingBulb(false);
     setPuzzle(createCircuitPuzzle(getBoardSize(1)));
-    setAnnouncement("Circuit started. Rotate the wire tiles to reach the light.");
-    deadline.current = Date.now() + ROUND_SECONDS * 1000;
+    setAnnouncement(
+      `Circuit started. Rotate the wire tiles to reach the light. You have ${roundSeconds} seconds.`,
+    );
+    deadline.current = Date.now() + roundSeconds * 1000;
     setStatus("PLAYING");
   };
 
   const rotateTile = (row: number, column: number) => {
-    if (status !== "PLAYING" || !puzzle) return;
+    if (status !== "PLAYING" || !puzzle || ignitingBulb) return;
 
     const nextPuzzle = rotatePuzzleTile(puzzle, row, column);
     if (nextPuzzle === puzzle) return;
 
-    const nextMoves = moves + 1;
-    setMoves(nextMoves);
+    setMoves((currentMoves) => currentMoves + 1);
+    setPuzzle(nextPuzzle);
 
     if (isCircuitComplete(nextPuzzle)) {
-      const nextLevel = level + 1;
       setScore((currentScore) => currentScore + 100);
-      setLevel(nextLevel);
-      setMoves(0);
-      setPuzzle(createCircuitPuzzle(getBoardSize(nextLevel)));
-      setAnnouncement(`Circuit complete. 100 points. Level ${nextLevel} started.`);
-      return;
+      setCompletedCircuits((completed) => completed + 1);
+      setIgnitingBulb(true);
+      setAnnouncement("Circuit complete. 100 points. The light is on.");
     }
-
-    setPuzzle(nextPuzzle);
   };
 
   return (
@@ -298,12 +359,20 @@ export const CircuitoExpress: React.FC = () => {
                     row={row}
                     column={column}
                     powered={poweredTiles.has(`${row},${column}`)}
+                    igniting={ignitingBulb && tile.kind === "bulb"}
+                    locked={ignitingBulb}
                     onRotate={rotateTile}
                   />
                 )),
               )}
             </div>
           </div>
+
+          {ignitingBulb && (
+            <p className="w-full max-w-xl rounded-xl border border-emerald-300/40 bg-emerald-500/10 px-4 py-2 text-center text-sm font-bold text-emerald-200 sm:text-base">
+              Light on! Next circuit coming up…
+            </p>
+          )}
 
           <div className="flex w-full max-w-xl items-center justify-between gap-3 text-xs text-slate-400 sm:text-sm">
             <span>Rotations: {moves}</span>
@@ -337,8 +406,9 @@ export const CircuitoExpress: React.FC = () => {
             </h2>
             <p className="mt-3 text-base leading-relaxed text-slate-300 sm:text-xl">
               {status === "GAME_OVER"
-                ? `You completed ${level - 1} ${level === 2 ? "circuit" : "circuits"} and scored ${score} points.`
-                : "Rotate the wire tiles to connect the power source to the light. Complete as many circuits as you can in 60 seconds."}
+                ? `You completed ${completedCircuits} ${completedCircuits === 1 ? "circuit" : "circuits"} and scored ${score} points.`
+                : "Rotate the wire tiles to connect the power source to the light. Complete as many circuits as you can in " +
+                  `${roundSeconds} seconds.`}
             </p>
           </div>
 
