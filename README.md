@@ -18,6 +18,7 @@ Game settings and best scores are saved in the browser's local storage. The Game
 - Vite 6 and React Router 7
 - Tailwind CSS 4 and Lucide React
 - `vite-plugin-pwa` for the web app
+- Playwright for end-to-end tests
 - Tauri 2 for the optional desktop app
 
 ## Project structure
@@ -31,6 +32,7 @@ Source files are at the repository root; this project does not use a `src/` dire
 ├── types.ts                # Shared types and route definitions
 ├── components/             # Shared UI components
 ├── games/                  # Game implementations
+├── e2e/                    # Playwright end-to-end specs
 ├── utils/                  # Shared utilities and game settings
 ├── views/                  # Page views, including the game launcher
 ├── public/assets/          # Logos, game images, and static assets
@@ -60,12 +62,13 @@ Open [http://localhost:3000](http://localhost:3000). Vite is configured to use p
 
 ```bash
 npm test
+npm run test:e2e
 npx tsc --noEmit
 npm run build
 npm run preview
 ```
 
-`npm test` runs the deterministic Circuito Express tests with Node's built-in test runner: the puzzle-logic suite and the settings suite that covers backward-compatible defaults and the configured round length. The production web bundle is written to `dist/`; no lint script is configured.
+`npm test` runs the deterministic Circuito Express tests with Node's built-in test runner: the puzzle-logic suite and the settings suite that covers backward-compatible defaults and the configured round length. `npm run test:e2e` starts the Vite dev server and runs the Playwright smoke suite in `e2e/` against Chromium on desktop and on an emulated Pixel 5 viewport; `npm run test:e2e:ui` opens the interactive runner and `npm run test:e2e:report` serves the last HTML report. The production web bundle is written to `dist/`; no lint script is configured.
 
 ### Run or build the desktop app
 
