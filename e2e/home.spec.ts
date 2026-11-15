@@ -10,7 +10,7 @@ const launcherNames = [
 
 test.describe('home launcher', () => {
   test('shows a launcher for every game', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     await expect(page.getByText('SYSTEM ONLINE')).toBeVisible();
 
@@ -20,7 +20,7 @@ test.describe('home launcher', () => {
   });
 
   test('opens a game from its launcher', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     await page.getByRole('button', { name: /NovaTech Catcher/ }).click();
 

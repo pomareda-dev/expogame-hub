@@ -19,7 +19,7 @@ test.describe('game routes', () => {
       const uncaughtErrors: Error[] = [];
       page.on('pageerror', (error) => uncaughtErrors.push(error));
 
-      await page.goto(`/#${path}`);
+      await page.goto(`./#${path}`);
 
       await expect(page).toHaveURL(new RegExp(`#${path}$`));
       await expect(
@@ -30,7 +30,7 @@ test.describe('game routes', () => {
   }
 
   test('the back control returns to the launcher', async ({ page }) => {
-    await page.goto('/#/connect-four');
+    await page.goto('./#/connect-four');
 
     await expect(page.getByRole('heading', { level: 1, name: 'Connect Four' })).toBeVisible();
 
