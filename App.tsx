@@ -11,6 +11,7 @@ import { FlappyBird } from "./games/FlappyBird";
 import { MemoryGame } from "./games/MemoryGame";
 import { CatcherGame } from "./games/CatcherGame";
 import { CircuitoExpress } from "./games/CircuitoExpress";
+import { LineaEnMarcha } from "./games/LineaEnMarcha";
 import { GameRoute } from "./types";
 
 const AnimatedRoutes: React.FC = () => {
@@ -27,6 +28,10 @@ const AnimatedRoutes: React.FC = () => {
         <Route
           path={GameRoute.CIRCUITO_EXPRESS}
           element={<CircuitoExpress />}
+        />
+        <Route
+          path={GameRoute.LINEA_EN_MARCHA}
+          element={<LineaEnMarcha />}
         />
       </Routes>
     </div>

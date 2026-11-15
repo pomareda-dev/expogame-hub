@@ -26,15 +26,21 @@ export interface CircuitoExpressSettings {
   maxTime: number;
 }
 
+export interface LineaEnMarchaSettings {
+  maxTime: number;
+}
+
 export interface GameSettings {
   connectFour: ConnectFourSettings;
   flappyBird: FlappyBirdSettings;
   catcher: CatcherGameSettings;
   memory: MemoryGameSettings;
   circuitoExpress: CircuitoExpressSettings;
+  lineaEnMarcha: LineaEnMarchaSettings;
 }
 
 export const CIRCUITO_EXPRESS_DEFAULT_MAX_TIME = 60;
+export const LINEA_EN_MARCHA_DEFAULT_MAX_TIME = 60;
 
 export const DEFAULT_SETTINGS: GameSettings = {
   connectFour: {
@@ -59,6 +65,9 @@ export const DEFAULT_SETTINGS: GameSettings = {
   },
   circuitoExpress: {
     maxTime: CIRCUITO_EXPRESS_DEFAULT_MAX_TIME,
+  },
+  lineaEnMarcha: {
+    maxTime: LINEA_EN_MARCHA_DEFAULT_MAX_TIME,
   },
 };
 
@@ -86,10 +95,11 @@ export const mergeStoredSettings = (stored: unknown): GameSettings => {
       DEFAULT_SETTINGS.circuitoExpress,
       parsed.circuitoExpress,
     ),
+    lineaEnMarcha: mergeSection(DEFAULT_SETTINGS.lineaEnMarcha, parsed.lineaEnMarcha),
   };
 };
 
-/** Round length in seconds for Circuito Express, falling back to the default. */
+/** Round length in seconds for Circuit Express, falling back to the default. */
 export const getCircuitoExpressRoundSeconds = (settings: {
   circuitoExpress?: { maxTime?: number };
 }): number => {
@@ -97,4 +107,17 @@ export const getCircuitoExpressRoundSeconds = (settings: {
   return typeof maxTime === "number" && Number.isFinite(maxTime) && maxTime > 0
     ? Math.round(maxTime)
     : CIRCUITO_EXPRESS_DEFAULT_MAX_TIME;
+};
+
+/** Round length in seconds for Production Line, falling back to the default. */
+export const getLineaEnMarchaRoundSeconds = (settings: {
+  lineaEnMarcha?: { maxTime?: number };
+}): number => {
+  const maxTime = settings?.lineaEnMarcha?.maxTime;
+  // Round first so a positive fraction under 0.5 cannot become a zero-second round.
+  const roundedSeconds =
+    typeof maxTime === "number" && Number.isFinite(maxTime)
+      ? Math.round(maxTime)
+      : 0;
+  return roundedSeconds > 0 ? roundedSeconds : LINEA_EN_MARCHA_DEFAULT_MAX_TIME;
 };

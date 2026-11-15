@@ -42,7 +42,7 @@ npm run test:e2e
 npm run build
 ```
 
-`npm test` runs the deterministic Circuito Express suites with Node's built-in test runner. `npm run test:e2e` runs the Playwright end-to-end suite in `e2e/` and starts the dev server itself; `npm run test:e2e:ui` opens the interactive runner and `npm run test:e2e:report` serves the last HTML report. No lint script is configured; do not report a lint suite as passing.
+`npm test` runs the deterministic Circuit Express and Production Line suites with Node's built-in test runner. `npm run test:e2e` runs the Playwright end-to-end suite in `e2e/` and starts the dev server itself; `npm run test:e2e:ui` opens the interactive runner and `npm run test:e2e:report` serves the last HTML report. No lint script is configured; do not report a lint suite as passing.
 
 End-to-end specs live in `e2e/` and depend on two project facts: the dev server serves the app from the Vite base path `/expogame-hub/`, and routing is hash-based. Navigate with relative URLs (`page.goto('./#/connect-four')`): a leading slash resolves against the origin and silently drops the base path from `baseURL`. A game screen renders its title as a level-1 heading, and that heading does not always match the launcher label (`NovaTech Catcher` opens `Star Catcher`). Playwright is configured for `chromium` and `mobile-chrome` (emulated Pixel 5); keep both projects touching when changing game input or global styles.
 

@@ -17,7 +17,7 @@ const settingsModel = await import(
   `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`
 );
 
-// Settings saved before Circuito Express existed have no circuitoExpress entry.
+// Settings saved before Circuit Express existed have no circuitoExpress entry.
 const LEGACY_STORED_SETTINGS = {
   connectFour: { rows: 8, cols: 9, marginTop: 12 },
   flappyBird: {
@@ -32,7 +32,7 @@ const LEGACY_STORED_SETTINGS = {
   memory: { padding: 24 },
 };
 
-test("the default Circuito Express round lasts 60 seconds", () => {
+test("the default Circuit Express round lasts 60 seconds", () => {
   const { DEFAULT_SETTINGS } = settingsModel;
 
   assert.deepEqual(DEFAULT_SETTINGS.circuitoExpress, { maxTime: 60 });

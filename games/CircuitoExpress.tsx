@@ -293,7 +293,7 @@ export const CircuitoExpress: React.FC = () => {
 
   return (
     <GameLayout
-      title="Circuito Express"
+      title="Circuit Express"
       highScore={bestScore}
       className="min-h-0 justify-start overflow-y-auto touch-pan-y"
     >
