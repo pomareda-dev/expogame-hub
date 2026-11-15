@@ -1,58 +1,24 @@
 import { useState, useEffect } from "react";
+import {
+  DEFAULT_SETTINGS,
+  mergeStoredSettings,
+  type GameSettings,
+} from "./gameSettingsModel";
 
-export interface ConnectFourSettings {
-  rows: number;
-  cols: number;
-  marginTop: number;
-}
-
-export interface FlappyBirdSettings {
-  birdSize: number;
-  gravity: number;
-  jumpStrength: number;
-  obstacleWidth: number;
-  obstacleGap: number;
-  obstacleSpeed: number;
-}
-
-export interface CatcherGameSettings {
-  fallSpeed: number;
-  maxTime: number;
-}
-
-export interface MemoryGameSettings {
-  padding: number;
-}
-
-export interface GameSettings {
-  connectFour: ConnectFourSettings;
-  flappyBird: FlappyBirdSettings;
-  catcher: CatcherGameSettings;
-  memory: MemoryGameSettings;
-}
-
-export const DEFAULT_SETTINGS: GameSettings = {
-  connectFour: {
-    rows: 6,
-    cols: 7,
-    marginTop: 0,
-  },
-  flappyBird: {
-    birdSize: 20,
-    gravity: 0.3,
-    jumpStrength: -7.5,
-    obstacleWidth: 60,
-    obstacleGap: 220,
-    obstacleSpeed: 2.5,
-  },
-  catcher: {
-    fallSpeed: 3,
-    maxTime: 60,
-  },
-  memory: {
-    padding: 16,
-  },
-};
+export {
+  CIRCUITO_EXPRESS_DEFAULT_MAX_TIME,
+  DEFAULT_SETTINGS,
+  getCircuitoExpressRoundSeconds,
+  mergeStoredSettings,
+} from "./gameSettingsModel";
+export type {
+  CatcherGameSettings,
+  CircuitoExpressSettings,
+  ConnectFourSettings,
+  FlappyBirdSettings,
+  GameSettings,
+  MemoryGameSettings,
+} from "./gameSettingsModel";
 
 const STORAGE_KEY = "expogame_settings";
 
@@ -62,12 +28,7 @@ export const getStoredSettings = (): GameSettings => {
     if (stored) {
       const parsed = JSON.parse(stored);
       // Merge with defaults to ensure new fields are present
-      return {
-        connectFour: { ...DEFAULT_SETTINGS.connectFour, ...parsed.connectFour },
-        flappyBird: { ...DEFAULT_SETTINGS.flappyBird, ...parsed.flappyBird },
-        catcher: { ...DEFAULT_SETTINGS.catcher, ...parsed.catcher },
-        memory: { ...DEFAULT_SETTINGS.memory, ...parsed.memory },
-      };
+      return mergeStoredSettings(parsed);
     }
   } catch (e) {
     console.error("Failed to load settings", e);

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "node --test tests/circuitoExpressPuzzle.test.mjs tests/circuitoExpressSettings.test.mjs",
     "build": "vite build",
     "build:tauri": "vite build --mode tauri",
     "dev:desktop": "tauri dev",
