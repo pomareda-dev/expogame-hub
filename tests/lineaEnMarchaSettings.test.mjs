@@ -108,3 +108,16 @@ test("the configured round length rounds and rejects non-finite or non-numeric v
   assert.equal(settingsModel.getLineaEnMarchaRoundSeconds({ lineaEnMarcha: { maxTime: "40" } }), 60);
   assert.equal(settingsModel.getLineaEnMarchaRoundSeconds({ lineaEnMarcha: null }), 60);
 });
+
+test("a positive fractional max time under half a second falls back to the default", () => {
+  const { getLineaEnMarchaRoundSeconds } = settingsModel;
+
+  assert.equal(
+    getLineaEnMarchaRoundSeconds({ lineaEnMarcha: { maxTime: 0.4 } }),
+    60,
+  );
+  assert.equal(
+    getLineaEnMarchaRoundSeconds({ lineaEnMarcha: { maxTime: 0.49 } }),
+    60,
+  );
+});

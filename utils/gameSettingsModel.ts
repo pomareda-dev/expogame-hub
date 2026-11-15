@@ -114,7 +114,10 @@ export const getLineaEnMarchaRoundSeconds = (settings: {
   lineaEnMarcha?: { maxTime?: number };
 }): number => {
   const maxTime = settings?.lineaEnMarcha?.maxTime;
-  return typeof maxTime === "number" && Number.isFinite(maxTime) && maxTime > 0
-    ? Math.round(maxTime)
-    : LINEA_EN_MARCHA_DEFAULT_MAX_TIME;
+  // Round first so a positive fraction under 0.5 cannot become a zero-second round.
+  const roundedSeconds =
+    typeof maxTime === "number" && Number.isFinite(maxTime)
+      ? Math.round(maxTime)
+      : 0;
+  return roundedSeconds > 0 ? roundedSeconds : LINEA_EN_MARCHA_DEFAULT_MAX_TIME;
 };
