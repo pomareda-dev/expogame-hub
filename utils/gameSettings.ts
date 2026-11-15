@@ -8,7 +8,9 @@ import {
 export {
   CIRCUITO_EXPRESS_DEFAULT_MAX_TIME,
   DEFAULT_SETTINGS,
+  LINEA_EN_MARCHA_DEFAULT_MAX_TIME,
   getCircuitoExpressRoundSeconds,
+  getLineaEnMarchaRoundSeconds,
   mergeStoredSettings,
 } from "./gameSettingsModel";
 export type {
@@ -17,6 +19,7 @@ export type {
   ConnectFourSettings,
   FlappyBirdSettings,
   GameSettings,
+  LineaEnMarchaSettings,
   MemoryGameSettings,
 } from "./gameSettingsModel";
 

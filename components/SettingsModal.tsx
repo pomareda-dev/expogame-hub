@@ -59,6 +59,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     { id: "catcher", label: "Catcher" },
     { id: "memory", label: "Memory" },
     { id: "circuitoExpress", label: "Circuito Express" },
+    { id: "lineaEnMarcha", label: "Línea en Marcha" },
   ];
 
   return (
@@ -218,6 +219,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   label="Max Time (s)"
                   value={localSettings.circuitoExpress.maxTime}
                   onChange={(v) => handleChange("circuitoExpress", "maxTime", v)}
+                  min={20}
+                  max={180}
+                  step={10}
+                />
+              </>
+            )}
+
+            {activeTab === "lineaEnMarcha" && (
+              <>
+                <SettingInput
+                  label="Max Time (s)"
+                  value={localSettings.lineaEnMarcha.maxTime}
+                  onChange={(v) => handleChange("lineaEnMarcha", "maxTime", v)}
                   min={20}
                   max={180}
                   step={10}
