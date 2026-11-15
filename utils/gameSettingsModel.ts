@@ -99,7 +99,7 @@ export const mergeStoredSettings = (stored: unknown): GameSettings => {
   };
 };
 
-/** Round length in seconds for Circuito Express, falling back to the default. */
+/** Round length in seconds for Circuit Express, falling back to the default. */
 export const getCircuitoExpressRoundSeconds = (settings: {
   circuitoExpress?: { maxTime?: number };
 }): number => {
@@ -109,7 +109,7 @@ export const getCircuitoExpressRoundSeconds = (settings: {
     : CIRCUITO_EXPRESS_DEFAULT_MAX_TIME;
 };
 
-/** Round length in seconds for Línea en Marcha, falling back to the default. */
+/** Round length in seconds for Production Line, falling back to the default. */
 export const getLineaEnMarchaRoundSeconds = (settings: {
   lineaEnMarcha?: { maxTime?: number };
 }): number => {

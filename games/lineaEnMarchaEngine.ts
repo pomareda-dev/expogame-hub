@@ -1,5 +1,5 @@
 /**
- * Deterministic engine for the "Línea en Marcha" arcade game.
+ * Deterministic engine for the "Production Line" arcade game.
  *
  * Stations travel along a production line. Each station assembles one
  * fictional Novatech device from an automation sequence whose pieces arrive

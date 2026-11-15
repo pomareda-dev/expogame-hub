@@ -58,8 +58,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     { id: "flappyBird", label: "Flappy Drone" },
     { id: "catcher", label: "Catcher" },
     { id: "memory", label: "Memory" },
-    { id: "circuitoExpress", label: "Circuito Express" },
-    { id: "lineaEnMarcha", label: "Línea en Marcha" },
+    { id: "circuitoExpress", label: "Circuit Express" },
+    { id: "lineaEnMarcha", label: "Production Line" },
   ];
 
   return (

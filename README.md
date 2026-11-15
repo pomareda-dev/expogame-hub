@@ -8,10 +8,10 @@ NovaTech Games Hub is an interactive web experience for NovaTech exhibitions. Vi
 - **Connect Four** — local two-player strategy game.
 - **Memory Match** — match NovaTech product images across three difficulty levels.
 - **NovaTech Catcher** — catch falling items and avoid obstacles.
-- **Circuito Express** — rotate fictional wire tiles to connect a power source to a light before time runs out. It is an arcade puzzle, not a guide to real electrical wiring.
-- **Línea en Marcha** — assemble stations on a moving production line by placing sensor, controller and actuator pieces in order before the station leaves the belt, using real NovaTech device images as station art. It is a fictional arcade game, not a guide to real automation equipment.
+- **Circuit Express** — rotate fictional wire tiles to connect a power source to a light before time runs out. It is an arcade puzzle, not a guide to real electrical wiring.
+- **Production Line** — assemble stations on a moving production line by placing sensor, controller and actuator pieces in order before the station leaves the belt, using real NovaTech device images as station art. It is a fictional arcade game, not a guide to real automation equipment.
 
-Game settings and best scores are saved in the browser's local storage. The Game Settings dialog includes a Circuito Express tab and a Línea en Marcha tab where the round length (`Max Time`) can be changed from the 60-second default. Settings saved by earlier versions keep their stored values and pick up the new default automatically.
+Game settings and best scores are saved in the browser's local storage. The Game Settings dialog includes a Circuit Express tab and a Production Line tab where the round length (`Max Time`) can be changed from the 60-second default. Settings saved by earlier versions keep their stored values and pick up the new default automatically.
 
 ## Technology
 
@@ -69,7 +69,7 @@ npm run build
 npm run preview
 ```
 
-`npm test` runs the deterministic Circuito Express and Línea en Marcha tests with Node's built-in test runner: the puzzle-logic suites and the settings suites that cover backward-compatible defaults and the configured round length. `npm run test:e2e` starts the Vite dev server and runs the Playwright smoke suite in `e2e/` against Chromium on desktop and on an emulated Pixel 5 viewport; `npm run test:e2e:ui` opens the interactive runner and `npm run test:e2e:report` serves the last HTML report. The production web bundle is written to `dist/`; no lint script is configured.
+`npm test` runs the deterministic Circuit Express and Production Line tests with Node's built-in test runner: the puzzle-logic and engine suites and the settings suites that cover backward-compatible defaults and the configured round length. `npm run test:e2e` starts the Vite dev server and runs the Playwright smoke suite in `e2e/` against Chromium on desktop and on an emulated Pixel 5 viewport; `npm run test:e2e:ui` opens the interactive runner and `npm run test:e2e:report` serves the last HTML report. The production web bundle is written to `dist/`; no lint script is configured.
 
 ### Run or build the desktop app
 

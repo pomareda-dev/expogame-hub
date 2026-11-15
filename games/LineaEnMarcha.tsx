@@ -254,7 +254,7 @@ export const LineaEnMarcha: React.FC = () => {
 
   return (
     <GameLayout
-      title="Línea en Marcha"
+      title="Production Line"
       highScore={bestScore}
       className="min-h-0 justify-start overflow-y-auto touch-pan-y"
     >

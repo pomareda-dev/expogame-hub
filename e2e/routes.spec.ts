@@ -10,8 +10,8 @@ const routes = [
   { path: '/flappy-bird', title: 'Flappy Drone' },
   { path: '/memory', title: 'Memory Match' },
   { path: '/catcher', title: 'Star Catcher' },
-  { path: '/circuito-express', title: 'Circuito Express' },
-  { path: '/linea-en-marcha', title: 'Línea en Marcha' },
+  { path: '/circuit-express', title: 'Circuit Express' },
+  { path: '/production-line', title: 'Production Line' },
 ];
 
 test.describe('game routes', () => {

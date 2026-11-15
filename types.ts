@@ -6,8 +6,8 @@ export enum GameRoute {
   FLAPPY_BIRD = "/flappy-bird",
   MEMORY = "/memory",
   CATCHER = "/catcher",
-  CIRCUITO_EXPRESS = "/circuito-express",
-  LINEA_EN_MARCHA = "/linea-en-marcha",
+  CIRCUITO_EXPRESS = "/circuit-express",
+  LINEA_EN_MARCHA = "/production-line",
 }
 
 export interface GameConfig {

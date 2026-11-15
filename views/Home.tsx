@@ -56,7 +56,7 @@ const games: GameConfig[] = [
   },
   {
     id: "circuito-express",
-    name: "Circuito Express",
+    name: "Circuit Express",
     route: GameRoute.CIRCUITO_EXPRESS,
     icon: (
       <Zap className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
@@ -66,7 +66,7 @@ const games: GameConfig[] = [
   },
   {
     id: "linea-en-marcha",
-    name: "Línea en Marcha",
+    name: "Production Line",
     route: GameRoute.LINEA_EN_MARCHA,
     icon: (
       <Factory className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />

@@ -17,7 +17,7 @@ const settingsModel = await import(
   `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`
 );
 
-// Settings saved before Línea en Marcha existed have no lineaEnMarcha entry.
+// Settings saved before Production Line existed have no lineaEnMarcha entry.
 const LEGACY_STORED_SETTINGS = {
   connectFour: { rows: 8, cols: 9, marginTop: 12 },
   flappyBird: {
@@ -33,7 +33,7 @@ const LEGACY_STORED_SETTINGS = {
   circuitoExpress: { maxTime: 45 },
 };
 
-test("the default Línea en Marcha round lasts 60 seconds", () => {
+test("the default Production Line round lasts 60 seconds", () => {
   const { DEFAULT_SETTINGS } = settingsModel;
 
   assert.deepEqual(DEFAULT_SETTINGS.lineaEnMarcha, { maxTime: 60 });

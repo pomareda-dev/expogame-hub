@@ -5,8 +5,8 @@ const launcherNames = [
   'Flappy Drone',
   'Memory Match',
   'NovaTech Catcher',
-  'Circuito Express',
-  'Línea en Marcha',
+  'Circuit Express',
+  'Production Line',
 ];
 
 test.describe('home launcher', () => {
