@@ -13,6 +13,13 @@ const intros: {
   surface: (page: Page) => Locator;
 }[] = [
   {
+    path: '/connect-four',
+    title: 'Connect Four',
+    headline: 'Four in a row',
+    start: 'Start game',
+    surface: (page) => page.getByText('Current Turn:'),
+  },
+  {
     path: '/circuit-express',
     title: 'Circuit Express',
     headline: 'Power the path',

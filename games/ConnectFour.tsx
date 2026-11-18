@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Gamepad2 } from "lucide-react";
+import { GameIntro } from "../components/GameIntro";
 import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { GameStatus } from "../types";
@@ -20,6 +22,8 @@ export const ConnectFour: React.FC = () => {
   );
 
   const [isInputLocked, setIsInputLocked] = useState(false);
+  // The route opens on an intro screen; the board appears once the match starts.
+  const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
     initGame();
@@ -128,6 +132,27 @@ export const ConnectFour: React.FC = () => {
       setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
   };
+
+  const startMatch = () => {
+    initGame();
+    setHasStarted(true);
+  };
+
+  if (!hasStarted) {
+    return (
+      <GameLayout title="Connect Four">
+        <GameIntro
+          accent="rose"
+          icon={Gamepad2}
+          eyebrow="NovaTech OS · Strategy"
+          headline="Four in a row"
+          description="Drop a piece into any column and line up four of your color — across, down or diagonally — before your opponent does. Red moves first."
+          actionLabel="Start game"
+          onAction={startMatch}
+        />
+      </GameLayout>
+    );
+  }
 
   return (
     <GameLayout title="Connect Four" className="-mt-24 lg:-mt-60 xl:mt-0">
