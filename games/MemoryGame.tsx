@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Brain } from "lucide-react";
+import { GameIntro } from "../components/GameIntro";
 import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { Button } from "../components/Button";
@@ -129,54 +131,52 @@ export const MemoryGame: React.FC = () => {
     }
   };
 
+  const startGame = (level: "EASY" | "HARD" | "INSANE") => {
+    setCards([]);
+    setDifficulty(level);
+    setStatus("PLAYING");
+  };
+
   if (status === "IDLE") {
     return (
-      <GameLayout title="Memory Match" className="-mt-28 lg:-mt-60 xl:-mt-12">
-        <div className="flex flex-col items-center justify-center h-full gap-8 animate-pop-in">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
-            Select Difficulty
-          </h2>
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md lg:max-w-6xl px-4">
-            <Button
-              onClick={() => {
-                setCards([]);
-                setDifficulty("EASY");
-                setStatus("PLAYING");
-              }}
-              size="lg"
-              className="flex-1 flex-col h-24 text-xl lg:w-52"
-            >
-              <div>Easy</div>
-              <div className="text-sm opacity-75 font-normal">(12 Cards)</div>
-            </Button>
-            <Button
-              onClick={() => {
-                setCards([]);
-                setDifficulty("HARD");
-                setStatus("PLAYING");
-              }}
-              size="lg"
-              variant="secondary"
-              className="flex-1 flex-col h-24 text-xl lg:w-64"
-            >
-              <div>Hard</div>
-              <div className="text-sm opacity-75 font-normal">(16 Cards)</div>
-            </Button>
-            <Button
-              onClick={() => {
-                setCards([]);
-                setDifficulty("INSANE");
-                setStatus("PLAYING");
-              }}
-              size="lg"
-              variant="danger"
-              className="flex-1 flex-col h-24 text-xl lg:w-52"
-            >
-              <div>Insane</div>
-              <div className="text-sm opacity-75 font-normal">(24 Cards)</div>
-            </Button>
-          </div>
-        </div>
+      <GameLayout title="Memory Match">
+        <GameIntro
+          accent="violet"
+          icon={Brain}
+          eyebrow="NovaTech OS · Memory"
+          headline="Select difficulty"
+          description="Flip two cards at a time and match every pair on the board. The fewer moves you need, the better your memory."
+          action={
+            <div className="flex w-full max-w-md flex-col gap-4 px-4 sm:flex-row lg:max-w-6xl">
+              <Button
+                onClick={() => startGame("EASY")}
+                size="lg"
+                className="flex-1 flex-col h-24 text-xl lg:w-52"
+              >
+                <div>Easy</div>
+                <div className="text-sm opacity-75 font-normal">(12 Cards)</div>
+              </Button>
+              <Button
+                onClick={() => startGame("HARD")}
+                size="lg"
+                variant="secondary"
+                className="flex-1 flex-col h-24 text-xl lg:w-64"
+              >
+                <div>Hard</div>
+                <div className="text-sm opacity-75 font-normal">(16 Cards)</div>
+              </Button>
+              <Button
+                onClick={() => startGame("INSANE")}
+                size="lg"
+                variant="danger"
+                className="flex-1 flex-col h-24 text-xl lg:w-52"
+              >
+                <div>Insane</div>
+                <div className="text-sm opacity-75 font-normal">(24 Cards)</div>
+              </Button>
+            </div>
+          }
+        />
       </GameLayout>
     );
   }
@@ -257,8 +257,9 @@ export const MemoryGame: React.FC = () => {
         message={`You cleared the board in ${moves} moves.`}
         isVictory={true}
         onRetry={() => {
+          // Replay keeps the chosen difficulty; the intro is the only place to change it.
           setCards([]);
-          setStatus("IDLE");
+          setStatus("PLAYING");
         }}
       />
     </GameLayout>

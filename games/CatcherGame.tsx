@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
+import { Target } from "lucide-react";
+import { GameIntro } from "../components/GameIntro";
 import { GameLayout } from "../components/GameLayout";
 import { ResultModal } from "../components/ResultModal";
 import { GameStatus } from "../types";
@@ -218,34 +220,25 @@ export const CatcherGame: React.FC = () => {
         ctx.fillText("💣", item.x, item.y);
       }
     });
-
-    // UI Text if IDLE
-    if (status === "IDLE") {
-      ctx.fillStyle = "white";
-      ctx.font = "18px Inter";
-      ctx.textAlign = "center";
-      ctx.fillText("Drag to move basket", canvas.width / 2, canvas.height / 2);
-      ctx.fillText(
-        "Catch NovaTech and Avoid Bombs 💣",
-        canvas.width / 2,
-        canvas.height / 2 + 30,
-      );
-
-      // Start Button Visual
-      ctx.fillStyle = "#0ea5e9";
-      ctx.roundRect(canvas.width / 2 - 60, canvas.height / 2 + 60, 120, 40, 10);
-      ctx.fill();
-      ctx.fillStyle = "white";
-      ctx.font = "bold 16px Inter";
-      ctx.fillText("START", canvas.width / 2, canvas.height / 2 + 85);
-    }
   };
 
-  const handleInteractionStart = (e: React.MouseEvent | React.TouchEvent) => {
-    if (status === "IDLE") {
-      initGame();
-    }
-  };
+  // The route opens on an intro screen; the canvas and the round only exist once
+  // the player starts, so neither the clock nor the basket runs behind it.
+  if (status === "IDLE") {
+    return (
+      <GameLayout title="Star Catcher" highScore={highScore}>
+        <GameIntro
+          accent="sky"
+          icon={Target}
+          eyebrow="NovaTech OS · Reflex"
+          headline="Catch the stars"
+          description={`Slide the basket to catch the falling NovaTech stars and dodge the bombs. You start with three lives and ${maxTime} seconds.`}
+          actionLabel="Start game"
+          onAction={initGame}
+        />
+      </GameLayout>
+    );
+  }
 
   return (
     <GameLayout title="Star Catcher" highScore={highScore}>
@@ -280,8 +273,6 @@ export const CatcherGame: React.FC = () => {
         className="w-full h-full touch-none cursor-col-resize"
         onMouseMove={(e) => handleMove(e.clientX)}
         onTouchMove={(e) => handleMove(e.touches[0].clientX)}
-        onMouseDown={handleInteractionStart}
-        onTouchStart={handleInteractionStart}
       >
         <canvas ref={canvasRef} className="block w-full h-full" />
       </div>
