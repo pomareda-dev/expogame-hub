@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 const launcherNames = [
   'Connect Four',
-  'Flappy Drone',
   'Memory Match',
   'NovaTech Catcher',
   'Circuit Express',

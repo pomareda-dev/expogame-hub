@@ -2,12 +2,10 @@ import { expect, test } from '@playwright/test';
 
 /**
  * The launcher label and the in-game title differ for some games: the home card
- * reads "NovaTech Catcher" while the screen header reads "Star Catcher", and the
- * card "Flappy Drone" opens a screen also titled "Flappy Drone".
+ * reads "NovaTech Catcher" while the screen header reads "Star Catcher".
  */
 const routes = [
   { path: '/connect-four', title: 'Connect Four' },
-  { path: '/flappy-bird', title: 'Flappy Drone' },
   { path: '/memory', title: 'Memory Match' },
   { path: '/catcher', title: 'Star Catcher' },
   { path: '/circuit-express', title: 'Circuit Express' },

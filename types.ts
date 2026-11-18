@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 export enum GameRoute {
   HOME = "/",
   CONNECT_FOUR = "/connect-four",
-  FLAPPY_BIRD = "/flappy-bird",
   MEMORY = "/memory",
   CATCHER = "/catcher",
   CIRCUITO_EXPRESS = "/circuit-express",
