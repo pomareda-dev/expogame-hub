@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { GameRoute, GameConfig } from "../types";
 import {
   Gamepad2,
-  Ghost,
   Brain,
   Target,
   Info,
@@ -23,16 +22,6 @@ const games: GameConfig[] = [
     ),
     color: "bg-gradient-to-br from-rose-500 to-rose-600",
     description: "Strategy Classic",
-  },
-  {
-    id: "flappy",
-    name: "Flappy Drone",
-    route: GameRoute.FLAPPY_BIRD,
-    icon: (
-      <Ghost className="w-10 h-10 lg:w-20 lg:h-20 xl:w-14 xl:h-14 text-white" />
-    ),
-    color: "bg-gradient-to-br from-amber-400 to-amber-600",
-    description: "Tap to fly",
   },
   {
     id: "memory",

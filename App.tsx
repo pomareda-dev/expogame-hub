@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { Home } from "./views/Home";
 import { ConnectFour } from "./games/ConnectFour";
-import { FlappyBird } from "./games/FlappyBird";
 import { MemoryGame } from "./games/MemoryGame";
 import { CatcherGame } from "./games/CatcherGame";
 import { CircuitoExpress } from "./games/CircuitoExpress";
@@ -22,7 +21,6 @@ const AnimatedRoutes: React.FC = () => {
       <Routes>
         <Route path={GameRoute.HOME} element={<Home />} />
         <Route path={GameRoute.CONNECT_FOUR} element={<ConnectFour />} />
-        <Route path={GameRoute.FLAPPY_BIRD} element={<FlappyBird />} />
         <Route path={GameRoute.MEMORY} element={<MemoryGame />} />
         <Route path={GameRoute.CATCHER} element={<CatcherGame />} />
         <Route

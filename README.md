@@ -1,10 +1,9 @@
 # NovaTech Games Hub 🎮
 
-NovaTech Games Hub is an interactive web experience for NovaTech exhibitions. Visitors can launch five games from a responsive, kiosk-friendly home screen. The same frontend can also be packaged as a Tauri desktop app.
+NovaTech Games Hub is an interactive web experience for NovaTech exhibitions. Visitors can launch four games from a responsive, kiosk-friendly home screen. The same frontend can also be packaged as a Tauri desktop app.
 
 ## Games
 
-- **Flappy Drone** — guide the drone through obstacles.
 - **Connect Four** — local two-player strategy game.
 - **Memory Match** — match NovaTech product images across three difficulty levels.
 - **NovaTech Catcher** — catch falling items and avoid obstacles.

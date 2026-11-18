@@ -4,15 +4,6 @@ export interface ConnectFourSettings {
   marginTop: number;
 }
 
-export interface FlappyBirdSettings {
-  birdSize: number;
-  gravity: number;
-  jumpStrength: number;
-  obstacleWidth: number;
-  obstacleGap: number;
-  obstacleSpeed: number;
-}
-
 export interface CatcherGameSettings {
   fallSpeed: number;
   maxTime: number;
@@ -32,7 +23,6 @@ export interface LineaEnMarchaSettings {
 
 export interface GameSettings {
   connectFour: ConnectFourSettings;
-  flappyBird: FlappyBirdSettings;
   catcher: CatcherGameSettings;
   memory: MemoryGameSettings;
   circuitoExpress: CircuitoExpressSettings;
@@ -47,14 +37,6 @@ export const DEFAULT_SETTINGS: GameSettings = {
     rows: 6,
     cols: 7,
     marginTop: 0,
-  },
-  flappyBird: {
-    birdSize: 20,
-    gravity: 0.3,
-    jumpStrength: -7.5,
-    obstacleWidth: 60,
-    obstacleGap: 220,
-    obstacleSpeed: 2.5,
   },
   catcher: {
     fallSpeed: 3,
@@ -88,7 +70,6 @@ export const mergeStoredSettings = (stored: unknown): GameSettings => {
 
   return {
     connectFour: mergeSection(DEFAULT_SETTINGS.connectFour, parsed.connectFour),
-    flappyBird: mergeSection(DEFAULT_SETTINGS.flappyBird, parsed.flappyBird),
     catcher: mergeSection(DEFAULT_SETTINGS.catcher, parsed.catcher),
     memory: mergeSection(DEFAULT_SETTINGS.memory, parsed.memory),
     circuitoExpress: mergeSection(

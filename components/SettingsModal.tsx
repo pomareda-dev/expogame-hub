@@ -55,7 +55,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const tabs: { id: keyof GameSettings; label: string }[] = [
     { id: "connectFour", label: "Connect Four" },
-    { id: "flappyBird", label: "Flappy Drone" },
     { id: "catcher", label: "Catcher" },
     { id: "memory", label: "Memory" },
     { id: "circuitoExpress", label: "Circuit Express" },
@@ -119,62 +118,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   min={-200}
                   max={200}
                   step={10}
-                />
-              </>
-            )}
-
-            {activeTab === "flappyBird" && (
-              <>
-                <SettingInput
-                  label="Bird Size"
-                  value={localSettings.flappyBird.birdSize}
-                  onChange={(v) => handleChange("flappyBird", "birdSize", v)}
-                  min={10}
-                  max={50}
-                />
-                <SettingInput
-                  label="Gravity"
-                  value={localSettings.flappyBird.gravity}
-                  onChange={(v) => handleChange("flappyBird", "gravity", v)}
-                  min={0.1}
-                  max={1.0}
-                  step={0.1}
-                />
-                <SettingInput
-                  label="Jump Strength"
-                  value={localSettings.flappyBird.jumpStrength}
-                  onChange={(v) =>
-                    handleChange("flappyBird", "jumpStrength", v)
-                  }
-                  min={-20}
-                  max={-1}
-                  step={0.5}
-                />
-                <SettingInput
-                  label="Obstacle Width"
-                  value={localSettings.flappyBird.obstacleWidth}
-                  onChange={(v) =>
-                    handleChange("flappyBird", "obstacleWidth", v)
-                  }
-                  min={20}
-                  max={100}
-                />
-                <SettingInput
-                  label="Obstacle Gap"
-                  value={localSettings.flappyBird.obstacleGap}
-                  onChange={(v) => handleChange("flappyBird", "obstacleGap", v)}
-                  min={100}
-                  max={400}
-                />
-                <SettingInput
-                  label="Speed"
-                  value={localSettings.flappyBird.obstacleSpeed}
-                  onChange={(v) =>
-                    handleChange("flappyBird", "obstacleSpeed", v)
-                  }
-                  min={1}
-                  max={10}
-                  step={0.5}
                 />
               </>
             )}

@@ -20,14 +20,6 @@ const settingsModel = await import(
 // Settings saved before Circuit Express existed have no circuitoExpress entry.
 const LEGACY_STORED_SETTINGS = {
   connectFour: { rows: 8, cols: 9, marginTop: 12 },
-  flappyBird: {
-    birdSize: 26,
-    gravity: 0.4,
-    jumpStrength: -8,
-    obstacleWidth: 70,
-    obstacleGap: 240,
-    obstacleSpeed: 3,
-  },
   catcher: { fallSpeed: 5, maxTime: 120 },
   memory: { padding: 24 },
 };
@@ -43,7 +35,6 @@ test("legacy stored settings keep every saved value and gain the 60 second defau
   const merged = mergeStoredSettings(structuredClone(LEGACY_STORED_SETTINGS));
 
   assert.deepEqual(merged.connectFour, LEGACY_STORED_SETTINGS.connectFour);
-  assert.deepEqual(merged.flappyBird, LEGACY_STORED_SETTINGS.flappyBird);
   assert.deepEqual(merged.catcher, LEGACY_STORED_SETTINGS.catcher);
   assert.deepEqual(merged.memory, LEGACY_STORED_SETTINGS.memory);
   assert.deepEqual(merged.circuitoExpress, {
