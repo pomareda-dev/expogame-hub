@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Clock3, Lightbulb, Play, RotateCw, Zap } from "lucide-react";
+import { Clock3, Lightbulb, RotateCw, Zap } from "lucide-react";
+import { GameIntro, GameIntroStats } from "../components/GameIntro";
 import { GameLayout } from "../components/GameLayout";
 import {
   type CircuitPuzzle,
@@ -389,63 +390,26 @@ export const CircuitoExpress: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="flex min-h-full w-full max-w-3xl flex-col items-center justify-center gap-5 px-5 py-8 text-center sm:gap-7">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-sky-300/30 bg-sky-500/10 text-sky-300 shadow-lg shadow-sky-950/30 sm:h-28 sm:w-28">
-            {status === "GAME_OVER" ? (
-              <Lightbulb aria-hidden="true" className="h-10 w-10 sm:h-14 sm:w-14" />
-            ) : (
-              <Zap aria-hidden="true" className="h-10 w-10 sm:h-14 sm:w-14" />
-            )}
-          </div>
-          <div className="max-w-xl">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-sky-300 sm:text-sm">
-              NovaTech Automation · Arcade Challenge
-            </p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
-              {status === "GAME_OVER" ? "Time's up" : "Power the path"}
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-slate-300 sm:text-xl">
-              {status === "GAME_OVER"
-                ? `You completed ${completedCircuits} ${completedCircuits === 1 ? "circuit" : "circuits"} and scored ${score} points.`
-                : "Rotate the wire tiles to connect the power source to the light. Complete as many circuits as you can in " +
-                  `${roundSeconds} seconds.`}
-            </p>
-          </div>
-
-          {status === "GAME_OVER" && (
-            <div className="flex gap-4 rounded-2xl border border-white/10 bg-slate-800/70 px-6 py-4">
-              <div>
-                <span className="block text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Score
-                </span>
-                <span className="font-mono text-2xl font-bold text-white">
-                  {score}
-                </span>
-              </div>
-              <div className="w-px bg-white/10" />
-              <div>
-                <span className="block text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Best
-                </span>
-                <span className="font-mono text-2xl font-bold text-amber-300">
-                  {bestScore}
-                </span>
-              </div>
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={startRound}
-            className="inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-sky-500 px-8 py-4 text-lg font-extrabold text-slate-950 shadow-xl shadow-sky-950/40 transition hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-300 active:scale-[0.98] sm:min-h-16 sm:px-10 sm:text-xl"
-          >
-            <Play aria-hidden="true" className="h-5 w-5 fill-current" />
-            {status === "GAME_OVER" ? "Play again" : "Start game"}
-          </button>
-          <p className="max-w-md text-xs leading-relaxed text-slate-500 sm:text-sm">
-            Fictional arcade puzzle — no real electrical equipment or wiring instructions.
-          </p>
-        </div>
+        <GameIntro
+          accent="sky"
+          icon={status === "GAME_OVER" ? Lightbulb : Zap}
+          eyebrow="NovaTech Automation · Arcade Challenge"
+          headline={status === "GAME_OVER" ? "Time's up" : "Power the path"}
+          description={
+            status === "GAME_OVER"
+              ? `You completed ${completedCircuits} ${completedCircuits === 1 ? "circuit" : "circuits"} and scored ${score} points.`
+              : "Rotate the wire tiles to connect the power source to the light. Complete as many circuits as you can in " +
+                `${roundSeconds} seconds.`
+          }
+          stats={
+            status === "GAME_OVER" ? (
+              <GameIntroStats score={score} best={bestScore} />
+            ) : undefined
+          }
+          actionLabel={status === "GAME_OVER" ? "Play again" : "Start game"}
+          onAction={startRound}
+          footer="Fictional arcade puzzle — no real electrical equipment or wiring instructions."
+        />
       )}
     </GameLayout>
   );
