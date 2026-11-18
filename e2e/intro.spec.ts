@@ -27,6 +27,13 @@ const intros: {
     surface: (page) => page.getByText('Pairs'),
   },
   {
+    path: '/catcher',
+    title: 'Star Catcher',
+    headline: 'Catch the stars',
+    start: 'Start game',
+    surface: (page) => page.locator('canvas'),
+  },
+  {
     path: '/circuit-express',
     title: 'Circuit Express',
     headline: 'Power the path',
