@@ -20,6 +20,13 @@ const intros: {
     surface: (page) => page.getByText('Current Turn:'),
   },
   {
+    path: '/memory',
+    title: 'Memory Match',
+    headline: 'Select difficulty',
+    start: 'Easy',
+    surface: (page) => page.getByText('Pairs'),
+  },
+  {
     path: '/circuit-express',
     title: 'Circuit Express',
     headline: 'Power the path',
