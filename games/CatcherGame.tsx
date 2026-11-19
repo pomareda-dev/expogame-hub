@@ -226,12 +226,12 @@ export const CatcherGame: React.FC = () => {
   // the player starts, so neither the clock nor the basket runs behind it.
   if (status === "IDLE") {
     return (
-      <GameLayout title="Star Catcher" highScore={highScore}>
+      <GameLayout title="NovaTech Catcher" highScore={highScore}>
         <GameIntro
           accent="sky"
           icon={Target}
           eyebrow="NovaTech OS · Reflex"
-          headline="Catch the stars"
+          headline="NovaTech Catcher"
           description={`Slide the basket to catch the falling NovaTech stars and dodge the bombs. You start with three lives and ${maxTime} seconds.`}
           actionLabel="Start game"
           onAction={initGame}
@@ -241,7 +241,7 @@ export const CatcherGame: React.FC = () => {
   }
 
   return (
-    <GameLayout title="Star Catcher" highScore={highScore}>
+    <GameLayout title="NovaTech Catcher" highScore={highScore}>
       <div className="absolute top-6 lg:top-10 w-full flex justify-between px-8 z-10 max-w-3xl mx-auto pointer-events-none">
         <div className="flex gap-4">
           <div className="bg-slate-800/80 px-4 py-2 rounded-xl border border-white/10 text-white text-sm lg:text-base font-mono font-bold shadow-lg">

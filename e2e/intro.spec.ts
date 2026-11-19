@@ -15,35 +15,35 @@ const intros: {
   {
     path: '/connect-four',
     title: 'Connect Four',
-    headline: 'Four in a row',
+    headline: 'Connect Four',
     start: 'Start game',
     surface: (page) => page.getByText('Current Turn:'),
   },
   {
     path: '/memory',
     title: 'Memory Match',
-    headline: 'Select difficulty',
+    headline: 'Memory Match',
     start: 'Easy',
     surface: (page) => page.getByText('Pairs'),
   },
   {
     path: '/catcher',
-    title: 'Star Catcher',
-    headline: 'Catch the stars',
+    title: 'NovaTech Catcher',
+    headline: 'NovaTech Catcher',
     start: 'Start game',
     surface: (page) => page.locator('canvas'),
   },
   {
     path: '/circuit-express',
     title: 'Circuit Express',
-    headline: 'Power the path',
+    headline: 'Circuit Express',
     start: 'Start game',
     surface: (page) => page.getByText(/Rotations:/),
   },
   {
     path: '/production-line',
     title: 'Production Line',
-    headline: 'Keep the line running',
+    headline: 'Production Line',
     start: 'Start game',
     surface: (page) => page.getByText(/Tap the pieces in order:/),
   },
@@ -53,6 +53,9 @@ test.describe('game intro screens', () => {
   for (const { path, title, headline, start, surface } of intros) {
     test(`${title} opens on its intro and starts on demand`, async ({ page }) => {
       await page.goto(`./#${path}`);
+
+      // The instruction screen header repeats the game name from the launcher.
+      await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
 
       const introHeading = page.getByRole('heading', { level: 2, name: headline });
       await expect(introHeading).toBeVisible();

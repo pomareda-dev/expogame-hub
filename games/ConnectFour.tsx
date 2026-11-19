@@ -150,7 +150,7 @@ export const ConnectFour: React.FC = () => {
           accent="rose"
           icon={Gamepad2}
           eyebrow="NovaTech OS · Strategy"
-          headline="Four in a row"
+          headline="Connect Four"
           description="Drop a piece into any column and line up four of your color — across, down or diagonally — before your opponent does. Red moves first. Play head to head, or take on the CPU."
           footer="Difficulty applies to the CPU opponent."
           action={
