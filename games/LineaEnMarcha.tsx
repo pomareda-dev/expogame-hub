@@ -19,6 +19,7 @@ import {
   advanceShip,
   createRound,
   getInitialHealth,
+  getNovatechDeviceName,
   getRoundSecondsLeft,
   isStationPiecePlaced,
   tapPiece as tapRoundPiece,
@@ -337,11 +338,11 @@ export const LineaEnMarcha: React.FC = () => {
             <figure className="mx-auto w-full max-w-sm">
               <img
                 src={`${DEVICE_IMAGE_BASE}${station.deviceId}.png`}
-                alt={`${station.deviceId} industrial automation device being assembled`}
+                alt={`${getNovatechDeviceName(station.deviceId)} industrial automation device being assembled`}
                 className="w-full rounded-xl border border-white/10 bg-slate-900 object-contain p-2"
               />
               <figcaption className="mt-1 text-center font-mono text-[10px] uppercase tracking-widest text-slate-400 sm:text-xs">
-                Station #{station.id} · {station.deviceId}
+                Station #{station.id} · {getNovatechDeviceName(station.deviceId)}
               </figcaption>
             </figure>
 
