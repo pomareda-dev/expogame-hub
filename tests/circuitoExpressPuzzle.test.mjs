@@ -113,3 +113,75 @@ test("rotating a tile returns a new puzzle without mutating the original", () =>
     (puzzle.grid[wire.row][wire.column].rotation + 1) % 4,
   );
 });
+
+const countWireTiles = (puzzle) =>
+  puzzle.grid.flat().filter((tile) => tile.kind === "wire").length;
+
+test("Easy, Medium and Hard each own a growing board-size band", () => {
+  const { CIRCUIT_DIFFICULTY_BANDS, getCircuitBoardSize } = puzzleModule;
+
+  assert.deepEqual(CIRCUIT_DIFFICULTY_BANDS.easy, { minSize: 3, maxSize: 4 });
+  assert.deepEqual(CIRCUIT_DIFFICULTY_BANDS.medium, { minSize: 4, maxSize: 5 });
+  assert.deepEqual(CIRCUIT_DIFFICULTY_BANDS.hard, { minSize: 5, maxSize: 6 });
+
+  // Level 1 starts the band; every second level grows the board by one step
+  // and the band's own ceiling stops the growth.
+  assert.equal(getCircuitBoardSize("easy", 1), 3);
+  assert.equal(getCircuitBoardSize("easy", 2), 3);
+  assert.equal(getCircuitBoardSize("easy", 3), 4);
+  assert.equal(getCircuitBoardSize("easy", 99), 4);
+
+  assert.equal(getCircuitBoardSize("medium", 1), 4);
+  assert.equal(getCircuitBoardSize("medium", 3), 5);
+  assert.equal(getCircuitBoardSize("medium", 99), 5);
+
+  assert.equal(getCircuitBoardSize("hard", 1), 5);
+  assert.equal(getCircuitBoardSize("hard", 3), 6);
+  assert.equal(getCircuitBoardSize("hard", 99), 6);
+});
+
+test("an unknown or unusable difficulty falls back to the Medium band", () => {
+  const { getCircuitBoardSize } = puzzleModule;
+
+  assert.equal(getCircuitBoardSize("impossible", 1), 4);
+  assert.equal(getCircuitBoardSize(undefined, 1), 4);
+  assert.equal(getCircuitBoardSize("hard", 0), 5);
+  assert.equal(getCircuitBoardSize("hard", Number.NaN), 5);
+});
+
+test("higher difficulties hand the player more wire tiles at the same level", () => {
+  const { createCircuitPuzzle, getCircuitBoardSize, getCircuitWireCount } =
+    puzzleModule;
+
+  const wiresAt = (difficulty, level) =>
+    countWireTiles(
+      createCircuitPuzzle(
+        getCircuitBoardSize(difficulty, level),
+        seededRandom(67),
+      ),
+    );
+
+  // Level 1 of each band: 3 wires, then 5, then 7.
+  assert.equal(wiresAt("easy", 1), 3);
+  assert.equal(wiresAt("medium", 1), 5);
+  assert.equal(wiresAt("hard", 1), 7);
+  assert.ok(wiresAt("easy", 1) < wiresAt("medium", 1));
+  assert.ok(wiresAt("medium", 1) < wiresAt("hard", 1));
+
+  // The top of each band keeps the same ordering: 5, 7 and 9 wires.
+  assert.equal(wiresAt("easy", 99), 5);
+  assert.equal(wiresAt("medium", 99), 7);
+  assert.equal(wiresAt("hard", 99), 9);
+
+  // The advertised count is the count the generator actually lays down.
+  for (const difficulty of ["easy", "medium", "hard"]) {
+    for (const level of [1, 2, 3, 4, 99]) {
+      const size = getCircuitBoardSize(difficulty, level);
+      assert.equal(
+        getCircuitWireCount(size),
+        wiresAt(difficulty, level),
+        `${difficulty} level ${level} advertises the right wire count`,
+      );
+    }
+  }
+});

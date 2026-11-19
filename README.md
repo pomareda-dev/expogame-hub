@@ -7,7 +7,7 @@ NovaTech Games Hub is an interactive web experience for NovaTech exhibitions. Vi
 - **Connect Four** — local two-player strategy game.
 - **Memory Match** — match NovaTech product images across three difficulty levels.
 - **NovaTech Catcher** — catch falling items and avoid obstacles.
-- **Circuit Express** — rotate fictional wire tiles to connect a power source to a light before time runs out. It is an arcade puzzle, not a guide to real electrical wiring.
+- **Circuit Express** — rotate fictional wire tiles to connect a power source to a light before time runs out. Easy, Medium and Hard set how many wires the route carries (3–5, 5–7 and 7–9), and each level grows the board inside that band. It is an arcade puzzle, not a guide to real electrical wiring.
 - **Production Line** — assemble stations on a moving production line by placing sensor, controller and actuator pieces in order before the station leaves the belt, using real NovaTech device images as station art. It is a fictional arcade game, not a guide to real automation equipment.
 
 Game settings and best scores are saved in the browser's local storage. The Game Settings dialog includes a Circuit Express tab and a Production Line tab where the round length (`Max Time`) can be changed from the 60-second default. Settings saved by earlier versions keep their stored values and pick up the new default automatically.

@@ -42,6 +42,46 @@ const createTile = (
 const clampBoardSize = (size: number): number =>
   Math.max(MIN_BOARD_SIZE, Math.min(MAX_BOARD_SIZE, Math.floor(size)));
 
+export type CircuitDifficulty = "easy" | "medium" | "hard";
+
+export interface CircuitDifficultyBand {
+  readonly minSize: number;
+  readonly maxSize: number;
+}
+
+/**
+ * A difficulty owns the board sizes a run may reach: it starts at `minSize`,
+ * grows one step every two levels, and `maxSize` closes the band. The route
+ * from the source to the light is longer on a bigger board, so a higher
+ * difficulty always shows the player more wire tiles to rotate.
+ */
+export const CIRCUIT_DIFFICULTY_BANDS: Record<
+  CircuitDifficulty,
+  CircuitDifficultyBand
+> = {
+  easy: { minSize: 3, maxSize: 4 },
+  medium: { minSize: 4, maxSize: 5 },
+  hard: { minSize: 5, maxSize: 6 },
+};
+
+/**
+ * Wire tiles on a solved board of this size: the route spans the whole board,
+ * and the power source and the light sit at its two ends.
+ */
+export const getCircuitWireCount = (size: number): number =>
+  2 * clampBoardSize(size) - 3;
+
+export const getCircuitBoardSize = (
+  difficulty: CircuitDifficulty,
+  level: number,
+): number => {
+  const band =
+    CIRCUIT_DIFFICULTY_BANDS[difficulty] ?? CIRCUIT_DIFFICULTY_BANDS.medium;
+  const safeLevel = Number.isFinite(level) ? Math.max(1, Math.floor(level)) : 1;
+
+  return Math.min(band.maxSize, band.minSize + Math.floor((safeLevel - 1) / 2));
+};
+
 const getDirectionBetween = (
   from: CircuitPosition,
   to: CircuitPosition,

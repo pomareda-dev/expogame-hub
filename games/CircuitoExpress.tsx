@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Clock3, Lightbulb, RotateCw, Zap } from "lucide-react";
+import { Button } from "../components/Button";
 import { GameIntro, GameIntroStats } from "../components/GameIntro";
 import { GameLayout } from "../components/GameLayout";
 import {
+  CIRCUIT_DIFFICULTY_BANDS,
+  type CircuitDifficulty,
   type CircuitPuzzle,
   type CircuitTile,
   EAST,
@@ -10,6 +13,8 @@ import {
   SOUTH,
   WEST,
   createCircuitPuzzle,
+  getCircuitBoardSize,
+  getCircuitWireCount,
   getPoweredTiles,
   getTileMask,
   isCircuitComplete,
@@ -33,8 +38,24 @@ const CONNECTOR_ENDS: Record<number, [number, number]> = {
 
 type RoundStatus = "READY" | "PLAYING" | "GAME_OVER";
 
-const getBoardSize = (level: number): number =>
-  Math.min(6, 4 + Math.floor((level - 1) / 2));
+// Medium keeps the board the game used before difficulty existed.
+const DEFAULT_DIFFICULTY: CircuitDifficulty = "medium";
+const DIFFICULTY_LABELS: Record<CircuitDifficulty, string> = {
+  easy: "Easy",
+  medium: "Medium",
+  hard: "Hard",
+};
+const DIFFICULTY_ORDER: readonly CircuitDifficulty[] = [
+  "easy",
+  "medium",
+  "hard",
+];
+
+// Every difficulty advertises the wire count it really lays down.
+const getWireRangeLabel = (difficulty: CircuitDifficulty): string => {
+  const band = CIRCUIT_DIFFICULTY_BANDS[difficulty];
+  return `${getCircuitWireCount(band.minSize)}–${getCircuitWireCount(band.maxSize)} wires`;
+};
 
 const readBestScore = (): number => {
   try {
@@ -186,6 +207,8 @@ export const CircuitoExpress: React.FC = () => {
   const [puzzle, setPuzzle] = useState<CircuitPuzzle | null>(null);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(readBestScore);
+  const [difficulty, setDifficulty] =
+    useState<CircuitDifficulty>(DEFAULT_DIFFICULTY);
   const [level, setLevel] = useState(1);
   const [moves, setMoves] = useState(0);
   const [completedCircuits, setCompletedCircuits] = useState(0);
@@ -250,26 +273,33 @@ export const CircuitoExpress: React.FC = () => {
       }
 
       const nextLevel = level + 1;
+      const nextSize = getCircuitBoardSize(difficulty, nextLevel);
       setLevel(nextLevel);
       setMoves(0);
-      setPuzzle(createCircuitPuzzle(getBoardSize(nextLevel)));
+      setPuzzle(createCircuitPuzzle(nextSize));
       setIgnitingBulb(false);
-      setAnnouncement(`Light on. Level ${nextLevel} started.`);
+      setAnnouncement(
+        `Light on. Level ${nextLevel} started with ${getCircuitWireCount(nextSize)} wires.`,
+      );
     }, IGNITION_DELAY_MS);
 
     return () => window.clearTimeout(timer);
-  }, [ignitingBulb, level, status]);
+  }, [difficulty, ignitingBulb, level, status]);
 
-  const startRound = () => {
+  const startRound = (nextDifficulty: CircuitDifficulty) => {
+    const firstSize = getCircuitBoardSize(nextDifficulty, 1);
+    const wireCount = getCircuitWireCount(firstSize);
+
     setScore(0);
+    setDifficulty(nextDifficulty);
     setLevel(1);
     setMoves(0);
     setCompletedCircuits(0);
     setTimeLeft(roundSeconds);
     setIgnitingBulb(false);
-    setPuzzle(createCircuitPuzzle(getBoardSize(1)));
+    setPuzzle(createCircuitPuzzle(firstSize));
     setAnnouncement(
-      `Circuit started. Rotate the wire tiles to reach the light. You have ${roundSeconds} seconds.`,
+      `Circuit started on ${DIFFICULTY_LABELS[nextDifficulty]} with ${wireCount} wire tiles. Rotate them to reach the light. You have ${roundSeconds} seconds.`,
     );
     deadline.current = Date.now() + roundSeconds * 1000;
     setStatus("PLAYING");
@@ -304,7 +334,10 @@ export const CircuitoExpress: React.FC = () => {
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-sky-300 sm:text-sm">
               Connect the source to the light
             </p>
-            <p className="mt-1 text-sm text-slate-300 sm:text-base">
+            <p className="mt-2 inline-flex items-center justify-center rounded-full border border-sky-400/30 bg-sky-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-sky-200 sm:text-xs">
+              {`${DIFFICULTY_LABELS[difficulty]} · ${getCircuitWireCount(puzzle.size)} wires`}
+            </p>
+            <p className="mt-2 text-sm text-slate-300 sm:text-base">
               Tap or click each wire to rotate it clockwise.
             </p>
           </div>
@@ -397,8 +430,8 @@ export const CircuitoExpress: React.FC = () => {
           headline={status === "GAME_OVER" ? "Time's up" : "Circuit Express"}
           description={
             status === "GAME_OVER"
-              ? `You completed ${completedCircuits} ${completedCircuits === 1 ? "circuit" : "circuits"} and scored ${score} points.`
-              : "Rotate the wire tiles to connect the power source to the light. Complete as many circuits as you can in " +
+              ? `You completed ${completedCircuits} ${completedCircuits === 1 ? "circuit" : "circuits"} on ${DIFFICULTY_LABELS[difficulty]} and scored ${score} points.`
+              : "Rotate the wire tiles to connect the power source to the light. Each difficulty adds more wires to the route; complete as many circuits as you can in " +
                 `${roundSeconds} seconds.`
           }
           stats={
@@ -406,8 +439,30 @@ export const CircuitoExpress: React.FC = () => {
               <GameIntroStats score={score} best={bestScore} />
             ) : undefined
           }
-          actionLabel={status === "GAME_OVER" ? "Play again" : "Start game"}
-          onAction={startRound}
+          action={
+            <div className="flex w-full max-w-md flex-col gap-3 px-4 sm:flex-row lg:max-w-3xl">
+              {DIFFICULTY_ORDER.map((option) => (
+                <Button
+                  key={option}
+                  onClick={() => startRound(option)}
+                  size="lg"
+                  variant={
+                    option === "easy"
+                      ? "primary"
+                      : option === "medium"
+                        ? "secondary"
+                        : "danger"
+                  }
+                  className="h-20 flex-1 flex-col text-xl"
+                >
+                  <span>{DIFFICULTY_LABELS[option]}</span>
+                  <span className="text-sm font-normal opacity-75">
+                    ({getWireRangeLabel(option)})
+                  </span>
+                </Button>
+              ))}
+            </div>
+          }
           footer="Fictional arcade puzzle — no real electrical equipment or wiring instructions."
         />
       )}

@@ -37,7 +37,7 @@ const intros: {
     path: '/circuit-express',
     title: 'Circuit Express',
     headline: 'Circuit Express',
-    start: 'Start game',
+    start: 'Easy',
     surface: (page) => page.getByText(/Rotations:/),
   },
   {
