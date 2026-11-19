@@ -28,7 +28,7 @@ const intros: {
   },
   {
     path: '/catcher',
-    title: 'Star Catcher',
+    title: 'NovaTech Catcher',
     headline: 'Catch the stars',
     start: 'Start game',
     surface: (page) => page.locator('canvas'),
@@ -53,6 +53,9 @@ test.describe('game intro screens', () => {
   for (const { path, title, headline, start, surface } of intros) {
     test(`${title} opens on its intro and starts on demand`, async ({ page }) => {
       await page.goto(`./#${path}`);
+
+      // The instruction screen header repeats the game name from the launcher.
+      await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
 
       const introHeading = page.getByRole('heading', { level: 2, name: headline });
       await expect(introHeading).toBeVisible();
