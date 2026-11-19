@@ -18,18 +18,39 @@ export const AUTOMATION_SEQUENCE: readonly SequencePiece[] = [
   "actuator",
 ];
 
-/** Fictional device catalog; ids map to images in public/assets/devices/. */
-export const NOVATECH_DEVICE_IDS: readonly string[] = [
-  "HERMES2000",
-  "KRONOS2P",
-  "KRONOS2R",
-  "KRONOS3R",
-  "ORIONIO",
-  "ORIONLX",
-  "ORIONLXM",
-  "ORIONMX",
-  "ORIONSX",
+/** One fictional Novatech device: its image file and the name players read. */
+export interface NovatechDevice {
+  /** File name, without extension, of the device image in public/assets/devices/. */
+  imageId: string;
+  /** Human-readable device name shown in the assembly bay. */
+  name: string;
+}
+
+/** Fictional device catalog; imageId maps to public/assets/devices/<imageId>.png. */
+export const NOVATECH_DEVICES: readonly NovatechDevice[] = [
+  { imageId: "HERMES2000", name: "Hermes 2000" },
+  { imageId: "KRONOS2P", name: "Kronos 2P" },
+  { imageId: "KRONOS2R", name: "Kronos 2R" },
+  { imageId: "KRONOS3R", name: "Kronos 3R" },
+  { imageId: "ORIONIO", name: "Orion IO" },
+  { imageId: "ORIONLX", name: "Orion LX" },
+  { imageId: "ORIONLXM", name: "Orion LXM" },
+  { imageId: "ORIONMX", name: "Orion MX" },
+  { imageId: "ORIONSX", name: "Orion SX" },
 ];
+
+/** Image ids of every catalogued device, used to pick a device at random. */
+export const NOVATECH_DEVICE_IDS: readonly string[] = NOVATECH_DEVICES.map(
+  (device) => device.imageId,
+);
+
+/**
+ * Display name for a device image id. Ids missing from the catalog fall back to
+ * the id itself so a station always renders a label.
+ */
+export const getNovatechDeviceName = (deviceId: string): string =>
+  NOVATECH_DEVICES.find((device) => device.imageId === deviceId)?.name ??
+  deviceId;
 
 const DISTRACTOR_PIECES: readonly DistractorPiece[] = ["manual", "battery"];
 
