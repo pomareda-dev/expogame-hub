@@ -212,42 +212,54 @@ export const MemoryGame: React.FC = () => {
             difficulty === "EASY" ? "grid-cols-3" : "grid-cols-4"
           }`}
         >
-          {cards.map((card, index) => (
-            <button
-              key={card.id}
-              onClick={() => handleCardClick(index)}
-              disabled={card.isMatched || card.isFlipped}
-              className={`relative w-full h-full rounded-2xl transition-all duration-300 transform perspective-1000 group ${
-                card.isFlipped || card.isMatched
-                  ? "rotate-y-180"
-                  : "hover:scale-[1.02] active:scale-95"
-              }`}
-            >
-              {/* Card Back (Hidden) */}
-              <div
-                className={`absolute inset-0 bg-slate-700 rounded-2xl border-b-4 border-slate-900 shadow-lg flex items-center justify-center backface-hidden transition-opacity duration-300 ${
-                  card.isFlipped || card.isMatched ? "opacity-0" : "opacity-100"
-                }`}
-              >
-                <span className="text-4xl opacity-10 group-hover:opacity-30 transition-opacity">
-                  ?
-                </span>
-              </div>
+          {cards.map((card, index) => {
+            const revealed = card.isFlipped || card.isMatched;
 
-              {/* Card Front (Visible) */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br from-brand-400 to-brand-600 rounded-2xl border-b-4 border-brand-800 flex items-center justify-center shadow-lg backface-hidden transition-opacity duration-300 ${
-                  card.isFlipped || card.isMatched ? "opacity-100" : "opacity-0"
+            return (
+              <button
+                key={card.id}
+                onClick={() => handleCardClick(index)}
+                disabled={card.isMatched || card.isFlipped}
+                className={`relative w-full h-full rounded-2xl transition-all duration-300 group ${
+                  revealed ? "" : "hover:scale-[1.02] active:scale-95"
                 }`}
+                // The card owns the 3D context so the faces below can be culled
+                // by backface-visibility instead of being flattened into the flip.
+                style={{
+                  transformStyle: "preserve-3d",
+                  ...(revealed
+                    ? { transform: "perspective(1000px) rotateY(180deg)" }
+                    : {}),
+                }}
               >
-                <img
-                  src={card.icon}
-                  alt="memory card"
-                  className="w-3/4 h-3/4 object-contain drop-shadow-md animate-pop-in"
-                />
-              </div>
-            </button>
-          ))}
+                {/* Card Back: faces the player while the card is still hidden. */}
+                <div
+                  className="absolute inset-0 bg-slate-700 rounded-2xl border-b-4 border-slate-900 shadow-lg flex items-center justify-center"
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  <span className="text-4xl opacity-10 group-hover:opacity-30 transition-opacity">
+                    ?
+                  </span>
+                </div>
+
+                {/* Card Front: counter-rotated so revealing the card shows the
+                    logo upright; without it the flip mirrors the artwork. */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-br from-brand-400 to-brand-600 rounded-2xl border-b-4 border-brand-800 flex items-center justify-center shadow-lg"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
+                  }}
+                >
+                  <img
+                    src={card.icon}
+                    alt="memory card"
+                    className="w-3/4 h-3/4 object-contain drop-shadow-md animate-pop-in"
+                  />
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
