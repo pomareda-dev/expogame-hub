@@ -90,6 +90,26 @@ test("stations carry a Novatech device image id from the known catalog", () => {
   assert.ok(station.deviceId.length > 0);
 });
 
+test("every catalogued device carries a display name, not its image file name", () => {
+  assert.ok(engine.NOVATECH_DEVICES.length > 0);
+
+  for (const device of engine.NOVATECH_DEVICES) {
+    assert.ok(engine.NOVATECH_DEVICE_IDS.includes(device.imageId));
+    assert.ok(device.name.trim().length > 0);
+    assert.notEqual(device.name, device.imageId);
+  }
+});
+
+test("a station device id resolves to its catalogued display name", () => {
+  const station = engine.createStation(2, 4, seededRandom(53));
+  const catalogued = engine.NOVATECH_DEVICES.find(
+    (device) => device.imageId === station.deviceId,
+  );
+
+  assert.equal(engine.getNovatechDeviceName(station.deviceId), catalogued.name);
+  assert.equal(engine.getNovatechDeviceName("UNKNOWN-DEVICE"), "UNKNOWN-DEVICE");
+});
+
 test("higher levels are never slower and stay within the speed bounds", () => {
   const firstLevel = engine.getStationTravelSeconds(1);
   const highLevel = engine.getStationTravelSeconds(8);
