@@ -10,6 +10,7 @@ Branch: `feature/circuito-express` | Owner: parent session | Scope: add a brande
 6. S6 — “Se ha agregado un archivo skills-lock.json y cambios en el gitignore, commitea esos también dentro de la nueva rama.”
 7. S7 — “Cuando un circuito se complete, agrega una pequeña animación corta para que se vea encendiendo el foco antes de pasar al siguiente nivel. También agrega el juego a las configuraciones para cambiar los settings del juego como el tiempo máximo de juego por ejemplo”
 8. S8 — “También he instalado Playwright para futuros test e2e, eso ignóralo que será para otra rama donde se empezará a configurar correctamente.”
+9. S9 — “Quiero implementar dificultades al juego @games/CircuitoExpress.tsx . Que aumente la cantidad de "wires" para cada dificultad: Easy, Medium, Hard. Crea una nueva rama para esta tarea y haz los commits necesarios.”
 
 ## Tasks
 - T1 — S1-S2, route: inline, commit: `8ccd090` (done) — Implement deterministic circuit-puzzle logic and tests.
@@ -18,6 +19,8 @@ Branch: `feature/circuito-express` | Owner: parent session | Scope: add a brande
 - T4 — S3-S5, route: inline, commit: `0e1c1ba` (done: user reviewed the current game and reports it works) — Run focused tests, type-check, production build, and gameplay checks; record commits and close.
 - T5 — S7, route: `gentle-ai-worker`, commit: `0e1c1ba` (done) — Add brief bulb-ignition feedback before advancing and a persisted Circuito Express maximum-duration setting.
 - T6 — S7, route: `gentle-ai-verify` (Risk: item 3), commit: `0e1c1ba` (done: no blockers) — Verify settings compatibility and behavior, then run applicable checks; real browser play-through remains unavailable to the assistant.
+- T7 — S9, route: inline, commit: `ef91fd6` (done) — Give Easy, Medium and Hard their own board-size band and pin the wire count each band produces.
+- T8 — S9, route: inline, commit: `3ca4524` (done) — Offer the three difficulties on the intro, show the live difficulty and wire count while playing, and cover both with Playwright.
 
 ## Log
 - L1 — Original request (verbatim):
@@ -40,3 +43,6 @@ Branch: `feature/circuito-express` | Owner: parent session | Scope: add a brande
 - L16 — Before the next commit, the previous branch baseline is `ae6d99c`; the runtime measured 871 authored changed lines. Keep the S7 settings/ignition work as a separate local work-unit slice; no PR or publishing is requested.
 - L17 — S7 implementation and verification committed as `0e1c1ba` (335 insertions, 84 deletions). The commit excludes the user's Playwright setup changes (`.gitignore`, `package-lock.json`, the `@playwright/test` dependency, `.github/`, `e2e/`, and `playwright.config.ts`).
 - L18 — Independent Risk 3 verification found no blockers. It noted advisory behavior for manually entered out-of-range/very small max-time values; these bounds were not expanded beyond the existing settings UI in this task.
+- L19 — New request (verbatim): “Quiero implementar dificultades al juego @games/CircuitoExpress.tsx . Que aumente la cantidad de "wires" para cada dificultad: Easy, Medium, Hard. Crea una nueva rama para esta tarea y haz los commits necesarios.”
+- L20 — Decisions taken with the user before writing code: difficulty fixes the level band (Easy 3×3→4×4, Medium 4×4→5×5, Hard 5×5→6×6) so the existing level growth survives inside it, and the selector lives on the intro screen rather than in Game Settings, so no persisted setting and no `SettingsModal` change. Wire tiles on a solved board are `2 × size − 3`, so the bands carry 3–5, 5–7 and 7–9 wires. Branch `feature/circuito-express-difficulties`, stacked on `main`.
+- L21 — T7/T8 outcome: bands and `getCircuitWireCount`/`getCircuitBoardSize` committed as `ef91fd6`; the intro selector, live difficulty/wire badge, game-over naming, updated intro e2e expectation and the new `e2e/circuit-difficulty.spec.ts` committed as `3ca4524`. Checks: `npm test` 65/65, `npx tsc --noEmit`, `npm run build`, and `npm run test:e2e` 42/42 on both the chromium and mobile-chrome projects. The RED step was observed first: the three new unit tests failed with `getCircuitBoardSize is not a function` before the implementation.
