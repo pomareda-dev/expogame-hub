@@ -144,7 +144,7 @@ export const MemoryGame: React.FC = () => {
           accent="violet"
           icon={Brain}
           eyebrow="NovaTech OS · Memory"
-          headline="Select difficulty"
+          headline="Memory Match"
           description="Flip two cards at a time and match every pair on the board. The fewer moves you need, the better your memory."
           action={
             <div className="flex w-full max-w-md flex-col gap-4 px-4 sm:flex-row lg:max-w-6xl">

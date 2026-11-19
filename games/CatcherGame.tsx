@@ -231,7 +231,7 @@ export const CatcherGame: React.FC = () => {
           accent="sky"
           icon={Target}
           eyebrow="NovaTech OS · Reflex"
-          headline="Catch the stars"
+          headline="NovaTech Catcher"
           description={`Slide the basket to catch the falling NovaTech stars and dodge the bombs. You start with three lives and ${maxTime} seconds.`}
           actionLabel="Start game"
           onAction={initGame}

@@ -445,7 +445,7 @@ export const LineaEnMarcha: React.FC = () => {
               ? health <= 0
                 ? "The line stopped"
                 : "Time's up"
-              : "Keep the line running"
+              : "Production Line"
           }
           description={
             status === "GAME_OVER"

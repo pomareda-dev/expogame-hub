@@ -394,7 +394,7 @@ export const CircuitoExpress: React.FC = () => {
           accent="sky"
           icon={status === "GAME_OVER" ? Lightbulb : Zap}
           eyebrow="NovaTech Automation · Arcade Challenge"
-          headline={status === "GAME_OVER" ? "Time's up" : "Power the path"}
+          headline={status === "GAME_OVER" ? "Time's up" : "Circuit Express"}
           description={
             status === "GAME_OVER"
               ? `You completed ${completedCircuits} ${completedCircuits === 1 ? "circuit" : "circuits"} and scored ${score} points.`
